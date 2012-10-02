@@ -33,9 +33,9 @@ module TemporalTables
 			if options[:temporal]
 				create_table_without_temporal temporal_name(table_name), options.merge(:primary_key => "history_id") do |t|
 					t.integer   :id
-					t.boolean   :deleted_ind, :null => false
-					t.timestamp :eff_from,    :null => false
-					t.timestamp :eff_to,      :null => false, :default => "9999-12-31"
+					t.boolean   :deleted,  :null => false
+					t.timestamp :eff_from, :null => false
+					t.timestamp :eff_to,   :null => false, :default => "9999-12-31"
 					block.call t
 				end
 

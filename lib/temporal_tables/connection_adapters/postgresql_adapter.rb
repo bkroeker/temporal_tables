@@ -13,7 +13,7 @@ module TemporalTables
 								begin
 									cur_time := localtimestamp;
 
-									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
+									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, false, cur_time);
 									
 									return null;
@@ -36,7 +36,7 @@ module TemporalTables
 									where id = new.id
 										and eff_to = '9999-12-31';
 								
-									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
+									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, false, cur_time);
 
 									return null;
@@ -59,7 +59,7 @@ module TemporalTables
 									where id = old.id
 										and eff_to = '9999-12-31';
 
-									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
+									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted, eff_from)
 									values (#{column_names.collect {|c| "old.#{c}"}.join(', ')}, true, cur_time);
 
 									return null;
