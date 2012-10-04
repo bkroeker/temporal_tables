@@ -8,16 +8,6 @@ module TemporalTables
 				alias_method_chain :remove_column, :temporal
 				alias_method_chain :change_column, :temporal
 
-				def add_missing_temporal_columns(table_name)
-					column_names = columns(table_name).map(&:name).map(&:to_sym)
-
-					[:created_at, :updated_at].each do |col|
-						add_column table_name, col, :datetime unless column_names.include?(col)
-					end
-
-					add_column table_name, :updated_by, :string unless column_names.include?(:updated_by)
-				end
-
 				def temporal_name(table_name)
 					"#{table_name}_h"
 				end
@@ -33,13 +23,11 @@ module TemporalTables
 			if options[:temporal]
 				create_table_without_temporal temporal_name(table_name), options.merge(:primary_key => "history_id") do |t|
 					t.integer   :id
-					t.boolean   :deleted,  :null => false
 					t.timestamp :eff_from, :null => false
 					t.timestamp :eff_to,   :null => false, :default => "9999-12-31"
 					block.call t
 				end
 
-				add_missing_temporal_columns table_name
 				create_temporal_triggers table_name
 			end
 		end
