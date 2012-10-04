@@ -12,8 +12,10 @@ module TemporalTables
 							for each row
 							begin
 								set @current_time = now();
-								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
-								values (new.id, #{column_names.collect {|c| "new.#{c}"}.join(', ')}, 0, @current_time);
+
+								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
+								values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, @current_time);
+
 							end
 						}
 						
@@ -22,11 +24,14 @@ module TemporalTables
 							for each row
 							begin
 								set @current_time = now();
+
 								update #{temporal_name(table_name)} set eff_to = @current_time
 								where id = new.id
 								and eff_to = '9999-12-31';
-								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
-								values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, 0, @current_time);
+
+								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
+								values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, @current_time);
+
 							end
 						}
 						
@@ -35,11 +40,11 @@ module TemporalTables
 							for each row
 							begin
 								set @current_time = now();
+
 								update #{temporal_name(table_name)} set eff_to = @current_time
 								where #{base_id_name} = old.id
 								and eff_to = '9999-12-31';
-								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, deleted_ind, eff_from)
-								values (#{column_names.collect {|c| "old.#{c}"}.join(', ')}, true, @current_time);
+
 							end
 						}
 					end
