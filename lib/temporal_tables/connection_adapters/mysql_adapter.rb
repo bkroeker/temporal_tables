@@ -4,6 +4,12 @@ module TemporalTables
 		module MysqlAdapter
 			def self.included(base)
 				base.class_eval do
+					def drop_temporal_triggers(table_name)
+						execute "drop trigger #{table_name}_ai"
+						execute "drop trigger #{table_name}_au"
+						execute "drop trigger #{table_name}_ad"
+					end
+
 					def create_temporal_triggers(table_name)
 						column_names = columns(table_name).map(&:name)
 

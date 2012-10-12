@@ -3,6 +3,12 @@ module TemporalTables
 		module PostgreSQLAdapter
 			def self.included(base)
 				base.class_eval do
+					def drop_temporal_triggers(table_name)
+						execute "drop trigger #{table_name}_ai on #{table_name}"
+						execute "drop trigger #{table_name}_au on #{table_name}"
+						execute "drop trigger #{table_name}_ad on #{table_name}"
+					end
+
 					def create_temporal_triggers(table_name)
 						column_names = columns(table_name).map(&:name)
 

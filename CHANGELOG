@@ -1,0 +1,5 @@
+0.0.2 (2012-10-12)
+
+* added support for rename_table 
+* added add_temporal_table(table_name) method
+* added remove_temporal_table(table_name) method
