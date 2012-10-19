@@ -24,7 +24,7 @@ module TemporalTables
 		end
 
 		def create_table_with_temporal(table_name, options = {}, &block)
-			skip_table = TemporalTables.skipped_temporal_tables.include? table_name.to_sym
+			skip_table = TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) || table_name.to_s =~ /_h$/
 
 			create_table_without_temporal table_name, options do |t|
 				block.call t
