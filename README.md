@@ -31,6 +31,17 @@ Any subsequent schema changes to foo will be reflected automatically in foo_h.
  # Nothing extra required -- foo_h will automatically get a "bar" column too!
  add_column :foo, :bar, :string
 
+## Config
+
+Create temporal tables for all tables by default
+ TemporalTables.create_by_default = true
+
+Don't create temporal tables for these tables.  Defaults to schema_migrations and sessions tables.
+ TemporalTables.skip_temporal_table_for :table_one, :table_two
+
+Add an updated_by field to all temporal tables to track who made any changes.  Defaults to a :string field.  The block is called when records are saved to determine the value to place within the updated_by field.
+ TemporalTables.add_updated_by_field(:integer) { User.current_user.try(:id) }
+
 ## Contributing
 
 1. Fork it

@@ -1,6 +1,7 @@
 require "temporal_tables/temporal_adapter"
 require "temporal_tables/connection_adapters/mysql_adapter"
 require "temporal_tables/connection_adapters/postgresql_adapter"
+require "temporal_tables/whodunnit"
 require "temporal_tables/version"
 
 module TemporalTables
@@ -16,6 +17,43 @@ module TemporalTables
 				module_name = subclass.name.split("::").last
 				subclass.send :include, TemporalTables::ConnectionAdapters.const_get(module_name) if TemporalTables::ConnectionAdapters.const_defined?(module_name)
 			end
+
+			ActiveRecord::Base.send :include, TemporalTables::Whodunnit
 		end
+	end
+
+	@@create_by_default = false
+	def self.create_by_default
+		@@create_by_default
+	end
+	def self.create_by_default=(default)
+		@@create_by_default = default
+	end
+
+	@@skipped_temporal_tables = [:schema_migrations, :sessions]
+	def self.skip_temporal_table_for(*tables)
+		@@skipped_temporal_tables += tables
+	end
+	def self.skipped_temporal_tables
+		@@skipped_temporal_tables.dup
+	end
+
+	@@add_updated_by_field = false
+	@@updated_by_type = :string
+	@@updated_by_proc = nil
+	def self.updated_by_type
+		@@updated_by_type
+	end
+	def self.updated_by_proc
+		@@updated_by_proc
+	end
+	def self.add_updated_by_field(type = :string, &block)
+		if block_given?
+			@@add_updated_by_field = true
+			@@updated_by_type = type
+			@@updated_by_proc = block
+		end
+
+		@@add_updated_by_field
 	end
 end

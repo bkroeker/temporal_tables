@@ -24,14 +24,23 @@ module TemporalTables
 		end
 
 		def create_table_with_temporal(table_name, options = {}, &block)
-			create_table_without_temporal table_name, options, &block
-			if options[:temporal]
+			skip_table = TemporalTables.skipped_temporal_tables.include? table_name.to_sym
+
+			create_table_without_temporal table_name, options do |t|
+				block.call t
+
+				if TemporalTables.add_updated_by_field && !skip_table
+					t.column :updated_by, TemporalTables.updated_by_type
+				end
+			end
+
+			if options[:temporal] || (TemporalTables.create_by_default && !skip_table)
 				add_temporal_table table_name, options
 			end
 		end
 
 		def add_temporal_table(table_name, options = {})
-			create_table_without_temporal temporal_name(table_name), options do |t|
+			create_table_without_temporal temporal_name(table_name), options.merge(:primary_key => "history_id") do |t|
 				t.integer   :id
 				t.timestamp :eff_from, :null => false
 				t.timestamp :eff_to,   :null => false, :default => "9999-12-31"
