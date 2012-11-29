@@ -1,3 +1,7 @@
+0.0.6 (2012-11-29)
+
+* optimized the history table index
+
 0.0.5 (2012-11-29)
 
 * added indexes to history tables
