@@ -1,3 +1,7 @@
+0.0.5 (2012-11-29)
+
+* added indexes to history tables
+
 0.0.4 (2012-10-19)
 
 * added updated_by support

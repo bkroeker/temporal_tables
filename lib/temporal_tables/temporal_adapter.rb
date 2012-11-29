@@ -49,6 +49,8 @@ module TemporalTables
 					t.send c.type, c.name, :limit => c.limit
 				end
 			end
+			add_index temporal_name(table_name), :id
+			add_index temporal_name(table_name), :eff_to
 			create_temporal_triggers table_name
 		end
 
