@@ -53,8 +53,25 @@ module TemporalTables
 		end
 
 		def exec_queries_with_time
+			history = table_name =~ /_h$/i && @at_value
+
+			# Store the at_time in the thread so that the preloader has access
+			if history
+				Thread.current[:at_time] = @at_value
+			end
+
+			# Note that record preloading, like when you specify 
+			#  MyClass.includes(:associations)
+			# happens within this exec_queries call.  That's why we needed to
+			# store the at_time in the thread above.
 			exec_queries_without_time
-			if table_name =~ /_h$/i && @at_value
+			
+			if history
+				# Clean out the thread
+				Thread.current[:at_time] = nil
+
+				# Store the at value on each record returned
+				# TODO: traverse preloaded associations too
 				@records.each do |r|
 					r.at_value = @at_value
 				end
@@ -81,8 +98,31 @@ module TemporalTables
 		end
 	end
 
+	# Uses the at time when fetching preloaded records
+	module PreloaderExtensions
+		def self.included(base)
+			base.class_eval do
+				alias_method_chain :build_scope, :at_time
+			end
+		end
+
+		def build_scope_with_at_time
+			# It seems the at time can be in either of these places, but not both,
+			# depending on when the preloading happens to be done
+			at_time = @owners.first.at_value if @owners.first.respond_to?(:at_value)
+			at_time ||= Thread.current[:at_time]
+
+			if at_time
+				build_scope_without_at_time.at(at_time)
+			else
+				build_scope_without_at_time
+			end
+		end
+	end
+
 end
 
 ActiveRecord::QueryMethods.send :include, TemporalTables::QueryExtensions
 ActiveRecord::Relation.send :include, TemporalTables::RelationExtensions
 ActiveRecord::Associations::Association.send :include, TemporalTables::AssociationExtensions
+ActiveRecord::Associations::Preloader::Association.send :include, TemporalTables::PreloaderExtensions
