@@ -29,8 +29,7 @@ module TemporalTables
 
 			# For each, add clauses to fetch records from the appropriate time 
 			table_names.each do |name|
-				if name =~ /_h$/i
-					@at_value ||= Time.now
+				if name =~ /_h$/i && @at_value
 					wheres += build_where("#{name}.eff_to >= ?", [@at_value])
 					wheres += build_where("#{name}.eff_from <= ?", [@at_value])
 				end
@@ -91,7 +90,9 @@ module TemporalTables
 
 		def target_scope_with_at_time
 			if @owner.respond_to?(:at_value)
-				target_scope_without_at_time.at(@owner.at_value)
+				# If this is a history record but no at time was given, 
+				# assume the record's effective to date
+				target_scope_without_at_time.at(@owner.at_value || @owner.eff_to)
 			else
 				target_scope_without_at_time
 			end
