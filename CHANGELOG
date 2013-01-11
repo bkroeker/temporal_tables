@@ -1,3 +1,7 @@
+0.1.0 (2013-01-10)
+
+* Added history querying
+
 0.0.6 (2012-11-29)
 
 * optimized the history table index

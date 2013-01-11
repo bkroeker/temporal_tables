@@ -2,6 +2,9 @@ require "temporal_tables/temporal_adapter"
 require "temporal_tables/connection_adapters/mysql_adapter"
 require "temporal_tables/connection_adapters/postgresql_adapter"
 require "temporal_tables/whodunnit"
+require "temporal_tables/temporal_class"
+require "temporal_tables/history_hook"
+require "temporal_tables/relation_extensions"
 require "temporal_tables/version"
 
 module TemporalTables
