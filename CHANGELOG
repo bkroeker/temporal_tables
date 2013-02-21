@@ -1,6 +1,10 @@
+0.2.0 (2013-02-21)
+
+* added support for indexes
+
 0.1.0 (2013-01-10)
 
-* Added history querying
+* added history querying
 
 0.0.6 (2012-11-29)
 
