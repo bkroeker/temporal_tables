@@ -131,9 +131,9 @@ module TemporalTables
 
 			if table_exists?(temporal_name(table_name))
 				column_names = Array.wrap(column_name)
-				index_name = temporal_index_name(options[:name] || index_name(table_name, :column => column_names))
+				idx_name = temporal_index_name(options[:name] || index_name(table_name, :column => column_names))
 
-				add_index_without_temporal temporal_name(table_name), column_name, options.except(:unique)
+				add_index_without_temporal temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
 			end
 		end
 
