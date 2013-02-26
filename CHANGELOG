@@ -1,3 +1,10 @@
+0.2.3 (2013-02-25)
+
+* bug fix: history classes did not have the correct primary key set, which could provide unexpected results in certain use cases
+* added a history method to ActiveRecord::Base objects to return a sorted list of all historical versions of that object.
+* added prev and next methods to history objects to aid in traversing the historical versions of an object.
+* added orig_obj method to history objects to return their non-historical objects
+
 0.2.2 (2013-02-25)
 
 * bug fix: add_index with specified name caused an index collision

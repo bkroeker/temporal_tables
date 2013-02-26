@@ -34,6 +34,14 @@ module TemporalTables
 				end	
 			end
 		end
+
+		# Returns a scope for the list of all history records for this 
+		# particular object.
+		def history
+			clazz = is_a?(TemporalTables::TemporalClass) ? self.class : self.class.history
+			oid = is_a?(TemporalTables::TemporalClass) ? orig_class.primary_key : self.class.primary_key
+			clazz.unscoped.where(id: attributes[oid]).order(:eff_from)
+		end
 	end
 end
 

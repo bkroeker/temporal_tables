@@ -4,6 +4,7 @@ module TemporalTables
 		def self.included(base)
 			base.class_eval do
 				self.table_name += "_h"
+				self.primary_key = "history_id"
 
 				cattr_accessor :visited_associations
 				@@visited_associations = []
@@ -32,7 +33,8 @@ module TemporalTables
 								association.name, 
 								association.options.merge(
 									class_name:  clazz.name, 
-									foreign_key: association.foreign_key
+									foreign_key: association.foreign_key,
+									primary_key: clazz.orig_class.primary_key
 								), 
 								association.active_record
 							)
@@ -44,7 +46,31 @@ module TemporalTables
 				def self.at(*args)
 					scoped.at(*args)
 				end
+
+				def self.orig_class
+					name.sub(/History$/, "").constantize
+				end
 			end
+		end
+
+		def orig_class
+			self.class.orig_class
+		end
+
+		def orig_id
+			attributes[orig_class.primary_key]
+		end
+
+		def orig_obj
+			@orig_obj ||= orig_class.find_by_id orig_id
+		end
+
+		def prev
+			@prev ||= history.where(self.class.arel_table[:eff_from].lt(eff_from)).last
+		end
+
+		def next
+			@next ||= history.where(self.class.arel_table[:eff_from].gt(eff_from)).first
 		end
 	end
 end
