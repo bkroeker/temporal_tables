@@ -141,9 +141,9 @@ module TemporalTables
 			remove_index_without_temporal table_name, options
 
 			if table_exists?(temporal_name(table_name))
-				index_name = temporal_index_name(index_name_for_remove(temporal_name(table_name), options))
-
-				remove_index_without_temporal temporal_name(table_name), options.merge(:name => index_name)
+				idx_name = temporal_index_name(index_name(table_name, options))
+				
+				remove_index_without_temporal temporal_name(table_name), :name => idx_name
 			end
 		end
 
