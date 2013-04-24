@@ -1,3 +1,7 @@
+0.2.5 (2013-04-24)
+
+* bug fix: rename_column wasn't linked in correctly
+
 0.2.4 (2013-03-07)
 
 * bug fix: another fix for removing indexes

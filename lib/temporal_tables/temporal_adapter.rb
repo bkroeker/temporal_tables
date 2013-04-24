@@ -8,6 +8,7 @@ module TemporalTables
 				alias_method_chain :add_column,    :temporal
 				alias_method_chain :remove_column, :temporal
 				alias_method_chain :change_column, :temporal
+				alias_method_chain :rename_column, :temporal
 				alias_method_chain :add_index,     :temporal
 				alias_method_chain :remove_index,  :temporal
 
