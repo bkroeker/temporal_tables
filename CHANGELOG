@@ -1,3 +1,7 @@
+0.2.6 (2013-05-23)
+
+* bug fix: explicitly set sti_name on history classes of STI subclasses
+
 0.2.5 (2013-04-24)
 
 * bug fix: rename_column wasn't linked in correctly

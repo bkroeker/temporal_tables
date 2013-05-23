@@ -3,6 +3,8 @@ module TemporalTables
 	module TemporalClass
 		def self.included(base)
 			base.class_eval do
+				base.extend ClassMethods
+
 				self.table_name += "_h"
 				self.primary_key = "history_id"
 
@@ -12,6 +14,10 @@ module TemporalTables
 				# The at_value field stores the time from the query that yielded
 				# this record.
 				attr_accessor :at_value
+
+				class << self
+					alias_method_chain :sti_name, :history
+				end
 
 				# Iterates all associations, makes sure their history classes are 
 				# created and initialized, and modifies the associations to point
@@ -41,15 +47,21 @@ module TemporalTables
 						end
 					end
 				end
+			end
+		end
 
-				# Delegate the at class method to the relation class.
-				def self.at(*args)
-					scoped.at(*args)
-				end
+		module ClassMethods
+			# Delegate the at class method to the relation class.
+			def at(*args)
+				scoped.at(*args)
+			end
 
-				def self.orig_class
-					name.sub(/History$/, "").constantize
-				end
+			def orig_class
+				name.sub(/History$/, "").constantize
+			end
+
+			def sti_name_with_history
+				sti_name_without_history.sub /History$/, ""
 			end
 		end
 
