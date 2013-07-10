@@ -17,6 +17,7 @@ module TemporalTables
 
 				class << self
 					alias_method_chain :sti_name, :history
+					alias_method_chain :find_sti_class, :history
 				end
 
 				# Iterates all associations, makes sure their history classes are 
@@ -62,6 +63,16 @@ module TemporalTables
 
 			def sti_name_with_history
 				sti_name_without_history.sub /History$/, ""
+			end
+
+			def descends_from_active_record?
+				superclass.descends_from_active_record?
+			end
+
+			def find_sti_class_with_history(type_name)
+				sti_class = find_sti_class_without_history(type_name)
+				sti_class = sti_class.history unless sti_class.respond_to?(:orig_class)
+				sti_class
 			end
 		end
 

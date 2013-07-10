@@ -1,3 +1,7 @@
+0.2.7 (2013-07-10)
+
+* bug fix: fix problems with STI instantiation
+
 0.2.6 (2013-05-23)
 
 * bug fix: explicitly set sti_name on history classes of STI subclasses
