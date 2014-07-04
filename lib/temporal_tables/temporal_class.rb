@@ -35,15 +35,12 @@ module TemporalTables
 							# Recreate the association, updating it to point at the 
 							# history class.  The foreign key is explicitly set since it's
 							# inferred from the class_name, but shouldn't be in this case.
-							create_reflection(
-								association.macro, 
-								association.name, 
+							send(association.macro, association.name, 
 								association.options.merge(
 									class_name:  clazz.name, 
 									foreign_key: association.foreign_key,
 									primary_key: clazz.orig_class.primary_key
-								), 
-								association.active_record
+								)
 							)
 						end
 					end

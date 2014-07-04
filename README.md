@@ -2,7 +2,7 @@
 
 Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.
 
-Currently for Ruby 1.9, Rails 3.2, Postgres
+Currently tested on Ruby 2.1, Rails 4.1, Postgres
 
 ## Installation
 
@@ -41,6 +41,11 @@ Any subsequent schema changes to people will be reflected automatically in peopl
 add_column :people, :name, :string
 ```
 
+To track the history of a pre-existing table, just call `add_temporal_table`:
+``` ruby
+add_temporal_table :people
+```
+
 ### Querying
 
 For the below queries, we'll assume the following schema:
@@ -66,7 +71,7 @@ class Wart < ActiveRecord::Base
 end
 ```
 
-You can query the history tables by calling +history+ on the class.
+You can query the history tables by calling `history` on the class.
 ``` ruby
 Person         #=> Person(id: :integer, name: :string)
 Person.history #=> PersonHistory(history_id: :integer, id: :integer, name: :string, eff_from: :datetime, eff_to: :datetime)
@@ -81,7 +86,7 @@ Person.history.where(id: 1).map { |p| "#{p.eff_from}: #{p.name}")
 # ]
 ```
 
-You can query for records as they were at any point in the past by calling +at+.
+You can query for records as they were at any point in the past by calling `at`.
 ``` ruby
  Person.history.at(2.years.ago).where(id: 1).first.name #=> "Grunthilda"
 ```
@@ -121,10 +126,5 @@ Add an updated_by field to all temporal tables to track who made any changes.  D
 TemporalTables.add_updated_by_field(:integer) { User.current_user.try(:id) }
 ```
 
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## Copyright
+See [LICENSE](https://github.com/bkroeker/temporal_tables/blob/master/LICENSE.txt) for more details.
