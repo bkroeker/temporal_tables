@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.3.1 (2015-10-08)
+ 
+ * bug fix: accepts reserved keywords for postgres column names, like "default"
+ * bug fix: correctly handles models nested within modules
+
 ## 0.3.0 (2014-07-04)
 
  * Updated for Rails 4

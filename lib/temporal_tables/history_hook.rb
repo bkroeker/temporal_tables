@@ -25,7 +25,9 @@ module TemporalTables
 					new_class = Class.new(self) do
 						include TemporalTables::TemporalClass
 					end
-					Object.const_set history_class, new_class
+					segments = history_class.split("::")
+					object_class = segments[0...-1].inject(Object) { |o, s| o.const_get(s) }
+					object_class.const_set segments.last, new_class
 
 					# Traverse associations and make sure they have
 					# history classes too.

@@ -19,7 +19,7 @@ module TemporalTables
 								begin
 									cur_time := localtimestamp;
 
-									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
+									insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
 									
 									return null;
@@ -42,7 +42,7 @@ module TemporalTables
 									where id = new.id
 										and eff_to = '9999-12-31';
 								
-									insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
+									insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
 
 									return null;
@@ -73,6 +73,10 @@ module TemporalTables
 							create trigger #{table_name}_ad after delete on #{table_name} 
 							for each row execute procedure #{table_name}_ad();
 						}
+					end
+
+					def column_list(column_names)
+						column_names.map { |c| "\"#{c}\"" }.join(', ')
 					end
 				end
 			end
