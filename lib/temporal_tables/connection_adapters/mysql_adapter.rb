@@ -1,7 +1,6 @@
 module TemporalTables
 	module ConnectionAdapters
-		# TODO: Test if this copied code actually works.
-		module MysqlAdapter
+		module AbstractMysqlAdapter
 			def self.included(base)
 				base.class_eval do
 					def drop_temporal_triggers(table_name)
@@ -14,7 +13,7 @@ module TemporalTables
 						column_names = columns(table_name).map(&:name)
 
 						execute %{
-							create trigger #{table_name}_ai after insert on #{table_name} 
+							create trigger #{table_name}_ai after insert on #{table_name}
 							for each row
 							begin
 								set @current_time = now();
@@ -24,9 +23,9 @@ module TemporalTables
 
 							end
 						}
-						
+
 						execute %{
-							create trigger #{table_name}_au after update on #{table_name} 
+							create trigger #{table_name}_au after update on #{table_name}
 							for each row
 							begin
 								set @current_time = now();
@@ -40,15 +39,15 @@ module TemporalTables
 
 							end
 						}
-						
+
 						execute %{
-							create trigger #{table_name}_ad after delete on #{table_name} 
+							create trigger #{table_name}_ad after delete on #{table_name}
 							for each row
 							begin
 								set @current_time = now();
 
 								update #{temporal_name(table_name)} set eff_to = @current_time
-								where #{base_id_name} = old.id
+								where id = old.id
 								and eff_to = '9999-12-31';
 
 							end

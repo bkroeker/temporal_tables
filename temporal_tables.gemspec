@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
 	gem.name          = "temporal_tables"
 	gem.version       = TemporalTables::VERSION
 	gem.authors       = ["Brent Kroeker"]
-	gem.email         = ["brent@lexor.ca"]
+	gem.email         = ["brent@bkroeker.com"]
 	gem.description   = %q{Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.}
 	gem.summary       = %q{Tracks all history of changes to a table automatically in a history table.}
 	gem.homepage      = ""
@@ -17,5 +17,8 @@ Gem::Specification.new do |gem|
 	gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
 	gem.require_paths = ["lib"]
 
-	gem.add_dependency "rails", "~> 4.1"
+	gem.add_dependency "rails", "~> 4"
+	gem.add_development_dependency "rspec", "~> 3.4"
+	gem.add_development_dependency "combustion", "~> 0.5.5"
+	gem.add_development_dependency "gemika"
 end

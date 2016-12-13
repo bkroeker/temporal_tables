@@ -1,7 +1,12 @@
 # CHANGELOG
 
+## 0.4.0 (2016-12-13)
+
+ * added multi-environment spec framework
+ * bug fix: mysql2 gem should now be functional
+
 ## 0.3.1 (2015-10-08)
- 
+
  * bug fix: accepts reserved keywords for postgres column names, like "default"
  * bug fix: correctly handles models nested within modules
 
@@ -63,6 +68,6 @@
 
 ## 0.0.2 (2012-10-12)
 
- * added support for rename_table 
+ * added support for rename_table
  * added add_temporal_table(table_name) method
  * added remove_temporal_table(table_name) method

@@ -21,16 +21,16 @@ module TemporalTables
 
 									insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
-									
+
 									return null;
 								end
 							$#{table_name}_ai$ language plpgsql;
 
 							drop trigger if exists #{table_name}_ai on #{table_name};
-							create trigger #{table_name}_ai after insert on #{table_name} 
-							for each row execute procedure #{table_name}_ai();	
+							create trigger #{table_name}_ai after insert on #{table_name}
+							for each row execute procedure #{table_name}_ai();
 						}
-						
+
 						execute %{
 							create or replace function #{table_name}_au() returns trigger as $#{table_name}_au$
 								declare
@@ -41,7 +41,7 @@ module TemporalTables
 									update #{temporal_name(table_name)} set eff_to = cur_time
 									where id = new.id
 										and eff_to = '9999-12-31';
-								
+
 									insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
 									values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
 
@@ -50,10 +50,10 @@ module TemporalTables
 							$#{table_name}_au$ language plpgsql;
 
 							drop trigger if exists #{table_name}_au on #{table_name};
-							create trigger #{table_name}_au after update on #{table_name} 
+							create trigger #{table_name}_au after update on #{table_name}
 							for each row execute procedure #{table_name}_au();
 						}
-						
+
 						execute %{
 							create or replace function #{table_name}_ad() returns trigger as $#{table_name}_ad$
 								declare
@@ -70,7 +70,7 @@ module TemporalTables
 							$#{table_name}_ad$ language plpgsql;
 
 							drop trigger if exists #{table_name}_ad on #{table_name};
-							create trigger #{table_name}_ad after delete on #{table_name} 
+							create trigger #{table_name}_ad after delete on #{table_name}
 							for each row execute procedure #{table_name}_ad();
 						}
 					end
