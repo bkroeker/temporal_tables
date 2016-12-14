@@ -51,8 +51,8 @@ module TemporalTables
 		def add_temporal_table(table_name, options = {})
 			create_table_without_temporal temporal_name(table_name), options.merge(:primary_key => "history_id") do |t|
 				t.integer   :id
-				t.timestamp :eff_from, :null => false
-				t.timestamp :eff_to,   :null => false, :default => "9999-12-31"
+				t.timestamp :eff_from, :null => false, limit: 6
+				t.timestamp :eff_to,   :null => false, limit: 6, :default => "9999-12-31"
 
 				for c in columns(table_name)
 					t.send c.type, c.name, :limit => c.limit
@@ -69,7 +69,7 @@ module TemporalTables
 				drop_table_without_temporal temporal_name(table_name)
 			end
 		end
-		
+
 		def drop_table_with_temporal(table_name, options = {})
 			drop_table_without_temporal table_name, options
 
@@ -143,7 +143,7 @@ module TemporalTables
 
 			if table_exists?(temporal_name(table_name))
 				idx_name = temporal_index_name(index_name(table_name, options))
-				
+
 				remove_index_without_temporal temporal_name(table_name), :name => idx_name
 			end
 		end
@@ -156,11 +156,11 @@ module TemporalTables
 
 				unless index_name_exists?(temporal_name(table_name), index_name, false)
 					add_index_without_temporal(
-						temporal_name(table_name), 
+						temporal_name(table_name),
 						index[:columns], {
 							# exclude unique constraints for temporal tables
-							:name   => index_name, 
-							:length => index[:lengths], 
+							:name   => index_name,
+							:length => index[:lengths],
 							:order  => index[:orders]
 					})
 				end

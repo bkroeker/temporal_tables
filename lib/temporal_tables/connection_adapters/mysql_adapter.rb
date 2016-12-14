@@ -16,7 +16,7 @@ module TemporalTables
 							create trigger #{table_name}_ai after insert on #{table_name}
 							for each row
 							begin
-								set @current_time = now();
+								set @current_time = utc_timestamp(6);
 
 								insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
 								values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, @current_time);
@@ -28,7 +28,7 @@ module TemporalTables
 							create trigger #{table_name}_au after update on #{table_name}
 							for each row
 							begin
-								set @current_time = now();
+								set @current_time = utc_timestamp(6);
 
 								update #{temporal_name(table_name)} set eff_to = @current_time
 								where id = new.id
@@ -44,7 +44,7 @@ module TemporalTables
 							create trigger #{table_name}_ad after delete on #{table_name}
 							for each row
 							begin
-								set @current_time = now();
+								set @current_time = utc_timestamp(6);
 
 								update #{temporal_name(table_name)} set eff_to = @current_time
 								where id = old.id

@@ -6,7 +6,6 @@ module TemporalTables
 				base.extend ClassMethods
 
 				self.table_name += "_h"
-				self.primary_key = "history_id"
 
 				cattr_accessor :visited_associations
 				@@visited_associations = []
@@ -20,7 +19,7 @@ module TemporalTables
 					alias_method_chain :find_sti_class, :history
 				end
 
-				# Iterates all associations, makes sure their history classes are 
+				# Iterates all associations, makes sure their history classes are
 				# created and initialized, and modifies the associations to point
 				# to the target classes' history classes.
 				def self.temporalize_associations!
@@ -32,12 +31,12 @@ module TemporalTables
 							# for this association is created and initialized
 							clazz = association.class_name.constantize.history
 
-							# Recreate the association, updating it to point at the 
+							# Recreate the association, updating it to point at the
 							# history class.  The foreign key is explicitly set since it's
 							# inferred from the class_name, but shouldn't be in this case.
-							send(association.macro, association.name, 
+							send(association.macro, association.name,
 								association.options.merge(
-									class_name:  clazz.name, 
+									class_name:  clazz.name,
 									foreign_key: association.foreign_key,
 									primary_key: clazz.orig_class.primary_key
 								)
