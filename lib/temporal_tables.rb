@@ -5,6 +5,7 @@ require "temporal_tables/whodunnit"
 require "temporal_tables/temporal_class"
 require "temporal_tables/history_hook"
 require "temporal_tables/relation_extensions"
+require "temporal_tables/scope_extensions"
 require "temporal_tables/version"
 
 module TemporalTables

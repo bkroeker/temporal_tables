@@ -34,6 +34,11 @@ describe Person do
 				expect(emily.warts).to eq([wart])
 				expect(emily.history.at(Time.now).last.warts).to eq([wart.history.last])
 			end
+
+			it "should allow scopes on associations" do
+				expect(emily.warts.very_hairy).to eq([wart])
+				expect(historical_emily.warts.very_hairy).to eq([wart.history.last])
+			end
 		end
 
 		describe "when reflecting on the past" do

@@ -79,9 +79,9 @@ Person.history #=> PersonHistory(history_id: :integer, id: :integer, name: :stri
 
 You can easily get a history of all changes to a records.
 ``` ruby
-Person.history.where(id: 1).map { |p| "#{p.eff_from}: #{p.name}") 
+Person.history.where(id: 1).map { |p| "#{p.eff_from}: #{p.name}")
 # => [
-#  "1974-01-14: Emily", 
+#  "1974-01-14: Emily",
 #  "2003-11-03: Grunthilda"
 # ]
 ```
@@ -100,6 +100,13 @@ grunthilda = Person.history.at(1.year.ago).find_by_name("Grunthilda")
 grunthilda.warts.count            #=> 13
 
 grunthilda.warts.first.class.name #=> "WartHistory"
+```
+
+And scopes also!
+``` ruby
+grunthilda = Person.history.at(1.year.ago).find_by_name("Grunthilda")
+grunthilda.warts.count            #=> 13
+grunthilda.warts.very_hairy.count #=> 7
 ```
 
 Instance methods are inherited.
