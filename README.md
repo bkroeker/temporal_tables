@@ -68,6 +68,8 @@ end
 class Wart < ActiveRecord::Base
   attr_accessible :location
   belongs_to :person
+
+  scope :very_hairy, -> { where(arel_table[:num_hairs].gteq(3)) }
 end
 ```
 
