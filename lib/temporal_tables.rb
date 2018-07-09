@@ -34,7 +34,7 @@ module TemporalTables
 		@@create_by_default = default
 	end
 
-	@@skipped_temporal_tables = [:schema_migrations, :sessions]
+	@@skipped_temporal_tables = [:schema_migrations, :sessions, :ar_internal_metadata]
 	def self.skip_temporal_table_for(*tables)
 		@@skipped_temporal_tables += tables
 	end
