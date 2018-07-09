@@ -1,13 +1,9 @@
 class Combustion::Database::Reset
-	def configuration
-		adapter = TemporalTables::DatabaseAdapter.adapter_name
-		ActiveRecord::Base.configurations[adapter]
-	end
-end
+  def call
+    configuration = resettable_db_configs[Rails.env]
+    adapter = configuration["adapter"] ||
+              configuration["url"].split("://").first
 
-class Combustion::Databases::MySQL
-	def reset
-		super
-		establish_connection TemporalTables::DatabaseAdapter.adapter_name.to_sym
-	end
+    operator_class(adapter).new(configuration).reset
+  end
 end

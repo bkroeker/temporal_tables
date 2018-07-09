@@ -46,11 +46,28 @@ describe Person do
 
 			it "should have historical name" do
 				expect(orig_emily.name).to eq("Emily")
+				expect(orig_emily.at_value).to eq(@init_time)
 			end
 
 			it "should not belong to a coven or have warts" do
 				expect(orig_emily.coven).to eq(nil)
 				expect(orig_emily.warts.count).to eq(0)
+			end
+		end
+
+		describe "when preloading associations" do
+			let(:orig_emily) { emily.history.at(@init_time).preload(:warts).first }
+
+			it 'should preload the correct time' do
+				expect(orig_emily.warts).to be_empty
+			end
+		end
+
+		describe "when eager_loading associations" do
+			let(:orig_emily) { emily.history.at(@init_time).eager_load(:warts).first }
+
+			it 'should include the correct time' do
+				expect(orig_emily.warts).to be_empty
 			end
 		end
 

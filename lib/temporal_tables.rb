@@ -16,13 +16,13 @@ module TemporalTables
 			# It's necessary to do this on the implementations in order for the
 			# alias method chain hooks to work.
 			ActiveRecord::ConnectionAdapters::AbstractAdapter.subclasses.each do |subclass|
-				subclass.send :include, TemporalTables::TemporalAdapter
+				subclass.send :prepend, TemporalTables::TemporalAdapter
 
 				module_name = subclass.name.split("::").last
-				subclass.send :include, TemporalTables::ConnectionAdapters.const_get(module_name) if TemporalTables::ConnectionAdapters.const_defined?(module_name)
+				subclass.send :prepend, TemporalTables::ConnectionAdapters.const_get(module_name) if TemporalTables::ConnectionAdapters.const_defined?(module_name)
 			end
 
-			ActiveRecord::Base.send :include, TemporalTables::Whodunnit
+			ActiveRecord::Base.send :prepend, TemporalTables::Whodunnit
 		end
 	end
 

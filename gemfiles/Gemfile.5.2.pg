@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 # Runtime dependencies
-gem 'rails', '~> 4.2.0'
-gem 'mysql2', '~> 0.4.4'
+gem 'rails', '~> 5.2.0'
+gem 'pg', '>= 0.18', '< 2.0'
 
 # Development dependencies
 gem 'rspec', '~> 3.4'
