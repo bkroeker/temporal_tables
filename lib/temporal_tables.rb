@@ -22,7 +22,7 @@ module TemporalTables
 				subclass.send :prepend, TemporalTables::ConnectionAdapters.const_get(module_name) if TemporalTables::ConnectionAdapters.const_defined?(module_name)
 			end
 
-			ActiveRecord::Base.send :prepend, TemporalTables::Whodunnit
+			ActiveRecord::Base.send :include, TemporalTables::Whodunnit
 		end
 	end
 

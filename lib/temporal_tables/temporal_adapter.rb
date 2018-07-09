@@ -30,6 +30,13 @@ module TemporalTables
 					t.send c.type, c.name, :limit => c.limit
 				end
 			end
+
+			if TemporalTables.add_updated_by_field && !column_exists?(table_name, :updated_by)
+				change_table table_name do |t|
+					t.column :updated_by, TemporalTables.updated_by_type
+				end
+			end
+
 			add_index temporal_name(table_name), [:id, :eff_to]
 			create_temporal_triggers table_name
 			create_temporal_indexes table_name
