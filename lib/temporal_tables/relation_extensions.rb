@@ -75,7 +75,6 @@ module TemporalTables
 
 			if historical?
 				# Store the at value on each record returned
-				# TODO: traverse preloaded associations too
 				@records.each do |r|
 					r.at_value = at_value
 				end
@@ -92,7 +91,10 @@ module TemporalTables
 	# made to associations.
 	module AssociationExtensions
 		def target_scope
-			if @owner.respond_to?(:at_value)
+			# Kludge: Check +public_methods+ instead of using +responds_to?+ to
+			# bypass +delegate_missing_to+ calls, as in +ActiveStorage::Attachment+.
+			# Using responds_to? results in an infinite loop stack overflow.
+			if @owner.public_methods.include?(:at_value)
 				# If this is a history record but no at time was given,
 				# assume the record's effective to date
 				super.at(@owner.at_value || @owner.eff_to)
