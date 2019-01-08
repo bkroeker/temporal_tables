@@ -2,5 +2,7 @@ rvm:
   - 2.4.3
 
 gemfile:
+  - gemfiles/Gemfile.5.0.pg
+  - gemfiles/Gemfile.5.1.pg
   - gemfiles/Gemfile.5.2.pg
   - gemfiles/Gemfile.5.2.mysql

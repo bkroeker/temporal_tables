@@ -1,8 +1,8 @@
 PATH
   remote: ..
   specs:
-    temporal_tables (0.6.4)
-      rails (~> 5.2)
+    temporal_tables (0.6.5)
+      rails (~> 5.0)
 
 GEM
   remote: https://rubygems.org/
@@ -152,4 +152,4 @@ DEPENDENCIES
   temporal_tables!
 
 BUNDLED WITH
-   1.16.1
+   1.16.6

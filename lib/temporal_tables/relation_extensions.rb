@@ -8,16 +8,26 @@ module TemporalTables
 			end
 		end
 
-    def at_value
-      get_value(:at) || Thread.current[:at_time]
-    end
+		def at_value
+			case Rails::VERSION::MINOR
+			when 0
+				@values.fetch(:at, nil) || Thread.current[:at_time]
+			else
+				get_value(:at) || Thread.current[:at_time]
+			end
+		end
 
-    def at_value=(value)
-      set_value(:at, value)
-    end
+		def at_value=(value)
+			case Rails::VERSION::MINOR
+			when 0
+				@values[:at] = value
+			else
+				set_value(:at, value)
+			end
+		end
 
 		def at(*args)
-      spawn.at!(*args)
+			spawn.at!(*args)
 		end
 
 		def at!(value)
@@ -84,6 +94,15 @@ module TemporalTables
 
 		def historical?
 			table_name =~ /_h$/i && at_value
+		end
+
+		# Only needed for Rails 5.1.x
+		def default_value_for(name)
+			if name == :at
+				nil
+			else
+				super(name)
+			end
 		end
 	end
 

@@ -133,7 +133,7 @@ module TemporalTables
 			indexes.each do |index|
 				index_name = temporal_index_name(index.name)
 
-				unless index_name_exists?(temporal_name(table_name), index_name)
+				unless temporal_index_exists?(table_name, index_name)
 					add_index(
 						temporal_name(table_name),
 						index.columns, {
@@ -161,6 +161,16 @@ module TemporalTables
 		# It's important not to increase the length of the returned string.
 		def temporal_index_name(index_name)
 			index_name.to_s.sub(/^index/, "ind_h").sub(/_ix(\d+)$/, '_hi\1')
+		end
+
+		def temporal_index_exists?(table_name, index_name)
+			raise "Rails version not supported" unless Rails::VERSION::MAJOR == 5
+			case Rails::VERSION::MINOR
+			when 0
+				index_name_exists?(temporal_name(table_name), index_name, false)
+			else
+				index_name_exists?(temporal_name(table_name), index_name)
+			end
 		end
 	end
 end
