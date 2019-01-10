@@ -92,5 +92,21 @@ describe Person do
 				expect(historical_emily.is_a?(PersonHistory)).to eq(true)
 			end
 		end
+
+		describe "when checking current state" do
+			it "should have correct information" do
+				# ie. we shouldn't break regular ActiveRecord behaviour
+				expect(Person.count).to eq(1)
+				expect(Wart.count).to eq(1)
+
+				emily = Person.first
+				expect(emily.warts.count).to eq(1)
+				expect(emily.warts.first.hairiness).to eq(3)
+
+				emily = Person.where(id: emily.id).eager_load(:warts).first
+				expect(emily.warts.count).to eq(1)
+				expect(emily.warts.first.hairiness).to eq(3)
+			end
+		end
 	end
 end

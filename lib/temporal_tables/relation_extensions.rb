@@ -40,12 +40,7 @@ module TemporalTables
 
 			at_clauses = []
 			if historical?
-				at_clauses << where_clause_factory.build(
-					arel_table[:eff_to].gteq(at_value).and(
-						arel_table[:eff_from].lteq(at_value)
-					),
-					[]
-				)
+				at_clauses << where_clause_factory.build(build_temporal_constraint(at_value), [])
 			end
 
 			[s, *at_clauses.compact].sum
@@ -139,8 +134,19 @@ module TemporalTables
 		end
 	end
 
+	# This is required for eager_load to work in Rails 5.0.x
+	module JoinDependencyExtensions
+		def build_constraint(klass, table, key, foreign_table, foreign_key)
+			constraint = super
+			if at_value = Thread.current[:at_time]
+				constraint = constraint.and(klass.build_temporal_constraint(at_value))
+			end
+			constraint
+		end
+	end
 end
 
 ActiveRecord::Relation.send :prepend, TemporalTables::RelationExtensions
 ActiveRecord::Associations::Association.send :prepend, TemporalTables::AssociationExtensions
 ActiveRecord::Associations::Preloader::Association.send :prepend, TemporalTables::PreloaderExtensions
+ActiveRecord::Associations::JoinDependency::JoinAssociation.send :prepend, TemporalTables::JoinDependencyExtensions

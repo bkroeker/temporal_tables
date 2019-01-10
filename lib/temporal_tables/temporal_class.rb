@@ -68,6 +68,12 @@ module TemporalTables
 			def descends_from_active_record?
 				superclass.descends_from_active_record?
 			end
+
+			def build_temporal_constraint(at_value)
+				arel_table[:eff_to].gteq(at_value).and(
+					arel_table[:eff_from].lteq(at_value)
+				)
+			end
 		end
 
 		def orig_class
