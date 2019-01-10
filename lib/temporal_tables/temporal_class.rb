@@ -16,6 +16,8 @@ module TemporalTables
 
 				class << self
 					prepend STIWithHistory
+
+					delegate :at, to: :all
 				end
 
 				# Iterates all associations, makes sure their history classes are

@@ -39,6 +39,11 @@ describe Person do
 				expect(emily.warts.very_hairy).to eq([wart])
 				expect(historical_emily.warts.very_hairy).to eq([wart.history.last])
 			end
+
+			it "should allow at value on class too" do
+				expect(Wart.history.at(Time.now).where(person: emily).count).to eq(1)
+				expect(Wart.history.at(1.minute.ago).where(person: emily).count).to eq(0)
+			end
 		end
 
 		describe "when reflecting on the past" do
