@@ -108,5 +108,21 @@ describe Person do
 				expect(emily.warts.first.hairiness).to eq(3)
 			end
 		end
+
+		describe "when working with STI one level deep" do
+			let!(:broom) { Broom.create person: emily, model: "Cackler 2000" }
+
+			it "should initialize model correctly" do
+				expect(emily.history.last.flying_machines).to eq([broom.history.last])
+			end
+		end
+
+		describe "when working with STI two levels deep" do
+			let!(:rocket_broom) { RocketBroom.create person: emily, model: "Pyrocackler 3000X" }
+
+			it "should initialize model correctly" do
+				expect(emily.history.last.flying_machines).to eq([rocket_broom.history.last])
+			end
+		end
 	end
 end

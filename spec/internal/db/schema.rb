@@ -1,6 +1,6 @@
 ActiveRecord::Schema.define do
 	create_table :people, temporal: true, force: true do |t|
-		t.references :coven
+		t.belongs_to :coven
 		t.string :name
 	end
 
@@ -10,7 +10,13 @@ ActiveRecord::Schema.define do
 	add_temporal_table :covens
 
 	create_table :warts, temporal: true, force: true do |t|
-		t.references :person
+		t.belongs_to :person
 		t.integer :hairiness
+	end
+
+	create_table :flying_machines, temporal: true, force: true do |t|
+		t.belongs_to :person
+		t.string :type
+		t.string :model
 	end
 end

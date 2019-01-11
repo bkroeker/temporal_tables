@@ -54,9 +54,13 @@ module TemporalTables
 			end
 
 			def find_sti_class(type_name)
-				sti_class = super(type_name)
-				sti_class = sti_class.history unless sti_class.respond_to?(:orig_class)
-				sti_class
+				type_name += "History" unless type_name =~ /History\Z/
+
+				begin
+					super
+				rescue ActiveRecord::SubclassNotFound
+					superclass.send(:find_sti_class, type_name)
+				end
 			end
 		end
 

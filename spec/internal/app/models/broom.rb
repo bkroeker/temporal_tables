@@ -1,0 +1,2 @@
+class Broom < FlyingMachine
+end

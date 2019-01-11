@@ -1,0 +1,2 @@
+class RocketBroom < Broom
+end
