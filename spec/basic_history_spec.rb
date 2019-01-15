@@ -74,6 +74,20 @@ describe Person do
 			it 'should include the correct time' do
 				expect(orig_emily.warts).to be_empty
 			end
+
+			it 'should generate sensible sql' do
+				sql = emily.history.at(@init_time).eager_load(:warts).where(Wart.history.arel_table[:hairiness].gteq(2)).to_sql.split(/(FROM)|(WHERE)|(ORDER)/)
+				from = sql[2]
+				where = sql[4]
+
+				expect(from.scan(/.warts_h.\..eff_from./i).count).to eq(1)
+				expect(from.scan(/.warts_h.\..eff_to./i).count).to eq(1)
+
+				expect(where.scan(/.people_h.\..eff_from./i).count).to eq(1)
+				expect(where.scan(/.people_h.\..eff_to./i).count).to eq(1)
+				expect(where.scan(/.warts_h.\..eff_from./i).count).to eq(0)
+				expect(where.scan(/.warts_h.\..eff_to./i).count).to eq(0)
+			end
 		end
 
 		describe "when checking simple code values" do

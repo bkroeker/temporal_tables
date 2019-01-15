@@ -32,18 +32,7 @@ module TemporalTables
 
 		def at!(value)
 			self.at_value = value
-			self
-		end
-
-		def where_clause
-			s = super
-
-			at_clauses = []
-			if historical?
-				at_clauses << where_clause_factory.build(build_temporal_constraint(at_value), [])
-			end
-
-			[s, *at_clauses.compact].sum
+			self.where!(klass.build_temporal_constraint(value))
 		end
 
 		def to_sql(*args)
@@ -100,53 +89,6 @@ module TemporalTables
 			end
 		end
 	end
-
-	# Uses the time from the "at" field stored in the record to filter queries
-	# made to associations.
-	module AssociationExtensions
-		def target_scope
-			# Kludge: Check +public_methods+ instead of using +responds_to?+ to
-			# bypass +delegate_missing_to+ calls, as in +ActiveStorage::Attachment+.
-			# Using responds_to? results in an infinite loop stack overflow.
-			if @owner.public_methods.include?(:at_value)
-				# If this is a history record but no at time was given,
-				# assume the record's effective to date
-				super.at(@owner.at_value || @owner.eff_to)
-			else
-				super
-			end
-		end
-	end
-
-	# Uses the at time when fetching preloaded records
-	module PreloaderExtensions
-		def build_scope
-			# It seems the at time can be in either of these places, but not both,
-			# depending on when the preloading happens to be done
-			at_time = @owners.first.at_value if @owners.first.respond_to?(:at_value)
-			at_time ||= Thread.current[:at_time]
-
-			if at_time
-				super.at(at_time)
-			else
-				super
-			end
-		end
-	end
-
-	# This is required for eager_load to work in Rails 5.0.x
-	module JoinDependencyExtensions
-		def build_constraint(klass, table, key, foreign_table, foreign_key)
-			constraint = super
-			if at_value = Thread.current[:at_time]
-				constraint = constraint.and(klass.build_temporal_constraint(at_value))
-			end
-			constraint
-		end
-	end
 end
 
-ActiveRecord::Relation.send :prepend, TemporalTables::RelationExtensions
-ActiveRecord::Associations::Association.send :prepend, TemporalTables::AssociationExtensions
-ActiveRecord::Associations::Preloader::Association.send :prepend, TemporalTables::PreloaderExtensions
-ActiveRecord::Associations::JoinDependency::JoinAssociation.send :prepend, TemporalTables::JoinDependencyExtensions
+ActiveRecord::Relation.prepend TemporalTables::RelationExtensions
