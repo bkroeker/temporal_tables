@@ -15,7 +15,7 @@ describe Person do
     let!(:wart) { Wart.create person: emily, hairiness: 3 }
 
     before do
-      emily.update_attributes name: "Grunthilda", coven: coven
+      emily.update name: "Grunthilda", coven: coven
       sleep 0.1
     end
 

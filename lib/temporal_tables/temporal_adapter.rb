@@ -27,6 +27,7 @@ module TemporalTables
         t.datetime :eff_to,   :null => false, limit: 6, :default => "9999-12-31"
 
         for c in columns(table_name)
+          next if c.name == "id"
           t.send c.type, c.name, :limit => c.limit
         end
       end
@@ -164,12 +165,18 @@ module TemporalTables
     end
 
     def temporal_index_exists?(table_name, index_name)
-      raise "Rails version not supported" unless Rails::VERSION::MAJOR == 5
-      case Rails::VERSION::MINOR
-      when 0
-        index_name_exists?(temporal_name(table_name), index_name, false)
-      else
+      case Rails::VERSION::MAJOR
+      when 5
+        case Rails::VERSION::MINOR
+        when 0
+          index_name_exists?(temporal_name(table_name), index_name, false)
+        else
+          index_name_exists?(temporal_name(table_name), index_name)
+        end
+      when 6
         index_name_exists?(temporal_name(table_name), index_name)
+      else
+        raise "Rails version not supported"
       end
     end
   end
