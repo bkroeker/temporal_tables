@@ -10,7 +10,12 @@ module TemporalTables
           block.call t
 
           if TemporalTables.add_updated_by_field && !skip_table
-            t.column :updated_by, TemporalTables.updated_by_type
+            updated_by_already_exists = t.columns.any? { |c| c.name == "updated_by" }
+            if updated_by_already_exists
+              puts "consider adding #{table_name} to TemporalTables skip_table"
+            else
+              t.column :updated_by, TemporalTables.updated_by_type
+            end
           end
         end
 
