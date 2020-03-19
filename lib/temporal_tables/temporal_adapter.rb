@@ -26,10 +26,10 @@ module TemporalTables
     end
 
     def add_temporal_table(table_name, options = {})
-      id = id_column(table_name)
-
       create_table temporal_name(table_name), options.merge(id: false, primary_key: "history_id", temporal_bypass: true) do |t|
-        t.column   :id, id.type
+        if options[:id] != false
+          t.column :id, options.fetch(:id, :integer)
+        end
         t.datetime :eff_from, null: false, limit: 6
         t.datetime :eff_to,   null: false, limit: 6, default: "9999-12-31"
 
@@ -185,10 +185,6 @@ module TemporalTables
       else
         raise "Rails version not supported"
       end
-    end
-
-    def id_column(table_name)
-      columns(table_name).detect { |c| c.name == "id" }
     end
   end
 end
