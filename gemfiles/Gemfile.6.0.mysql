@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Runtime dependencies
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.0.2'
 gem 'mysql2'
 
 # Development dependencies

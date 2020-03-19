@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     temporal_tables (0.7.0)
-      rails (>= 5.0, <= 6.0)
+      rails (>= 5.0, < 6.1)
 
 GEM
   remote: https://rubygems.org/
