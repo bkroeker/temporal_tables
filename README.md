@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/bkroeker/temporal_tables/workflows/Continuous%20Integration/badge.svg?branch=master)](https://github.com/bkroeker/temporal_tables/actions)
+
 # TemporalTables
 
 Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.
