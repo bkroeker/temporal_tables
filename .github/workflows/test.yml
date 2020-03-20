@@ -17,9 +17,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_USER: root
-          MYSQL_ROOT_PASSWORD: ""
+          MYSQL_ROOT_PASSWORD: password
         ports:
         - 3306
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
@@ -43,10 +41,10 @@ jobs:
     #     mysql user: root
     #     mysql password: root
 
-    - name: Check mysql status
+    - name: Verify MySQL connection from host
       run: |
-        sudo systemctl status mysql.service
-        sudo systemctl start mysql
+        sudo apt-get install -y mysql-client
+        mysql --host 127.0.0.1 --port ${{ job.services.mysql.ports['3306'] }} -uroot -ppassword -e "SHOW DATABASES"
 
     - name: Build App
       env:
