@@ -43,6 +43,11 @@ jobs:
         mysql user: root
         mysql password: root
 
+    - name: Check mysql status
+      run: |
+        sudo systemctl status mysql.service
+        sudo systemctl start mysql
+
     - name: Build App
       env:
         PGHOST: localhost
