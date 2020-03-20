@@ -42,7 +42,6 @@ jobs:
     - name: Start Mysql
       run: |
         sudo systemctl start mysql
-        mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW GRANTS FOR 'root'@'localhost'"
 
     - name: Build App
       env:
