@@ -18,10 +18,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Set up Ruby 2.5.4
-      uses: actions/setup-ruby@v1
+    - name: Setup Ruby for use with actions
+      uses: actions/setup-ruby@v1.0.0
       with:
-        ruby-version: 2.5.4
+        # Version range or exact version of a Ruby version to use.
+        version: 2.5.4 # optional, default is >= 2.4
 
     - name: Install PostgreSQL 11 client
       run: |
