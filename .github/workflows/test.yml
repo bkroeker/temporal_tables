@@ -14,6 +14,7 @@ jobs:
         image: postgres:11.5
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
       mysql:
         image: mysql:8.0
         env:
@@ -30,25 +31,7 @@ jobs:
         # Version range or exact version of a Ruby version to use.
         version: 2.5.7 # optional, default is >= 2.4
 
-    - name: Install PostgreSQL 11 client
-      run: |
-        sudo apt-get -yqq install libpq-dev
-
-    # - name: Setup MySQL
-    #   uses: mirromutth/mysql-action@v1.1
-    #   with:
-    #     mysql user: root
-    #     mysql password: root
-
-    - name: Verify MySQL connection from host
-      run: |
-        sudo apt-get install -y mysql-client
-        mysql --host 127.0.0.1 -uroot -ppassword -e "SHOW DATABASES"
-
     - name: Build App
-      env:
-        PGHOST: localhost
-        PGUSER: postgres
       run: |
         gem install bundler
         gem install bundler -v 1.17.3
@@ -57,8 +40,5 @@ jobs:
         mv spec/internal/config/database.ci.yml spec/internal/config/database.yml
 
     - name: Run Tests
-      env:
-        PGHOST: localhost
-        PGUSER: postgres
       run: |
         bundle exec rake matrix:spec
