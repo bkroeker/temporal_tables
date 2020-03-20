@@ -1,0 +1,45 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:11.5
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+        ports: ["3306:3306"]
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Setup Ruby
+      uses: actions/setup-ruby@v1.0.0
+      with:
+        version: 2.5.7
+
+    - name: Build App
+      run: |
+        gem install bundler
+        gem install bundler -v 1.17.3
+        bundle install --jobs 4 --retry 3
+        bundle exec rake matrix:install
+        mv spec/internal/config/database.ci.yml spec/internal/config/database.yml
+
+    - name: Run Tests
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+      run: |
+        bundle exec rake matrix:spec

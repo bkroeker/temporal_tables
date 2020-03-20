@@ -1,0 +1,12 @@
+mysql:
+  adapter: mysql2
+  database: temporal_tables_test
+  host: 127.0.0.1
+  username: root
+  password: password
+
+postgresql:
+  adapter: postgresql
+  database: temporal_tables_test
+  user: postgres
+  password:
