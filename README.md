@@ -4,7 +4,7 @@
 
 Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.
 
-Currently tested on Ruby 2.5.4, Rails 5.1 - 6.0, Postgres 11.3, MySQL 8.0.13
+Currently tested on Ruby 2.5.7, Rails 5.1 - 6.0, Postgres 11.5, MySQL 8.0
 
 ## Installation
 
@@ -88,18 +88,28 @@ Person         #=> Person(id: :integer, name: :string)
 Person.history #=> PersonHistory(history_id: :integer, id: :integer, name: :string, eff_from: :datetime, eff_to: :datetime)
 ```
 
-You can easily get a history of all changes to a records.
+You can easily get a history of all changes to a record.
 ``` ruby
-Person.history.where(id: 1).map { |p| "#{p.eff_from}: #{p.to_s}")
+Person.history.where(id: 1).map { |p| "#{p.eff_from}: #{p.to_s}" }
 # => [
 #  "1974-01-14: Emily",
 #  "2003-11-03: Grunthilda from Delta Gamma Gamma"
 # ]
 ```
 
+A convenient `history` method is mixed into ActiveRecord classes.  The above could be rewritten as:
+``` ruby
+grunthilda = Person.find(1)
+grunthilda.history.map { |p| "#{p.eff_from}: #{p.to_s}" }
+```
+
 You can query for records as they were at any point in the past by calling `at`.
 ``` ruby
  Person.history.at(2.years.ago).where(id: 1).first.name #=> "Grunthilda"
+
+ # alternatively:
+ grunthilda = Person.find(1)
+ grunthilda.history.at(2.years.ago).first.name #=> "Grunthilda"
 ```
 
 Associations work too.
