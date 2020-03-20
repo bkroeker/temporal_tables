@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-ruby@v1.0.0
       with:
         # Version range or exact version of a Ruby version to use.
-        version: 2.5 # optional, default is >= 2.4
+        version: 2.5.7 # optional, default is >= 2.4
 
     - name: Install PostgreSQL 11 client
       run: |
@@ -34,6 +34,7 @@ jobs:
         PGUSER: postgres
       run: |
         gem install bundler
+        gem install bundler -v 1.17.3
         bundle install --jobs 4 --retry 3
         bundle exec rake matrix:install
 
