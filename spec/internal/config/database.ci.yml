@@ -3,7 +3,7 @@ mysql:
   database: temporal_tables_test
   host: localhost
   username: root
-  password: password
+  password:
 
 postgresql:
   adapter: postgresql

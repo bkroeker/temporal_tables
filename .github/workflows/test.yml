@@ -17,10 +17,11 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: temporal_tables_test
           MYSQL_ROOT_HOST: 127.0.0.1
           MYSQL_USER: root
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: ""
         ports:
         - 3306
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
@@ -41,7 +42,7 @@ jobs:
     - name: Start Mysql
       run: |
         sudo systemctl start mysql
-        mysql --host 127.0.0.1 --port 3306 -uroot -ppassword -e "SHOW GRANTS FOR 'root'@'localhost'"
+        mysql --host 127.0.0.1 --port 3306 -uroot -e "SHOW GRANTS FOR 'root'@'localhost'"
 
     - name: Build App
       env:
