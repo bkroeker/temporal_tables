@@ -14,15 +14,15 @@ jobs:
         image: postgres:11.5
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      # mysql:
-      #   image: mysql:8.0
-      #   env:
-      #     MYSQL_ALLOW_EMPTY_PASSWORD: true
-      #     MYSQL_USER: root
-      #     MYSQL_ROOT_PASSWORD: ""
-      #   ports:
-      #   - 3306
-      #   options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: ""
+        ports:
+        - 3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v1
@@ -37,11 +37,11 @@ jobs:
       run: |
         sudo apt-get -yqq install libpq-dev
 
-    - name: Setup MySQL
-      uses: mirromutth/mysql-action@v1.1
-      with:
-        mysql user: root
-        mysql password: root
+    # - name: Setup MySQL
+    #   uses: mirromutth/mysql-action@v1.1
+    #   with:
+    #     mysql user: root
+    #     mysql password: root
 
     - name: Check mysql status
       run: |
