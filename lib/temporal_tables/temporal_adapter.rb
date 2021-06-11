@@ -2,12 +2,12 @@ module TemporalTables
   module TemporalAdapter
     def create_table(table_name, options = {}, &block)
       if options[:temporal_bypass]
-        super table_name, options, &block
+        super table_name, **options, &block
       else
         skip_table = TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) || table_name.to_s =~ /_h$/
 
-        super table_name, options do |t|
-          block.call t
+        super table_name, **options do |t|
+          yield t if block_given?
 
           if TemporalTables.add_updated_by_field && !skip_table
             updated_by_already_exists = t.columns.any? { |c| c.name == "updated_by" }
@@ -58,10 +58,10 @@ module TemporalTables
     end
 
     def drop_table(table_name, options = {})
-      super table_name, options
+      super table_name, **options
 
       if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), options
+        super temporal_name(table_name), **options
       end
     end
 
@@ -79,10 +79,10 @@ module TemporalTables
     end
 
     def add_column(table_name, column_name, type, options = {})
-      super table_name, column_name, type, options
+      super table_name, column_name, type, **options
 
       if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), column_name, type, options
+        super temporal_name(table_name), column_name, type, **options
         create_temporal_triggers table_name
       end
     end
@@ -97,10 +97,10 @@ module TemporalTables
     end
 
     def change_column(table_name, column_name, type, options = {})
-      super table_name, column_name, type, options
+      super table_name, column_name, type, **options
 
       if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), column_name, type, options
+        super temporal_name(table_name), column_name, type, **options
         # Don't need to update triggers here...
       end
     end
@@ -115,21 +115,21 @@ module TemporalTables
     end
 
     def add_index(table_name, column_name, options = {})
-      super table_name, column_name, options
+      super table_name, column_name, **options
 
       if table_exists?(temporal_name(table_name))
         column_names = Array.wrap(column_name)
         idx_name = temporal_index_name(options[:name] || index_name(table_name, :column => column_names))
 
-        super temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
+        super temporal_name(table_name), column_name, **(options.except(:unique).merge(name: idx_name))
       end
     end
 
     def remove_index(table_name, options = {})
-      super table_name, options
+      super table_name, **options
 
       if table_exists?(temporal_name(table_name))
-        idx_name = temporal_index_name(index_name(table_name, options))
+        idx_name = temporal_index_name(index_name(table_name, **options))
 
         super temporal_name(table_name), :name => idx_name
       end
