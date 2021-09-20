@@ -4,7 +4,7 @@
 
 Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.
 
-Currently tested on Ruby 2.5.7, Rails 5.1 - 6.0, Postgres 11.5, MySQL 8.0
+Currently tested on Ruby 2.5.9, Rails 5.1 - 6.0, Postgres 11.5, MySQL 8.0
 
 ## Installation
 
