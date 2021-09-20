@@ -1,6 +1,6 @@
 class Combustion::Database::Reset
   def call
-    configuration = resettable_db_configs[Rails.env]
+    configuration = resettable_db_configs.to_h[Rails.env]
     adapter = configuration["adapter"] ||
               configuration["url"].split("://").first
 
