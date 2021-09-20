@@ -9,6 +9,10 @@ module TemporalTables
     end
 
     def at_value
+      if Rails::VERSION::MAJOR == 6 && Rails::VERSION::MINOR == 1
+        return @values.fetch(:at, nil) || Thread.current[:at_time]
+      end
+
       case Rails::VERSION::MINOR
       when 0
         @values.fetch(:at, nil) || Thread.current[:at_time]
