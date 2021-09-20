@@ -21,13 +21,21 @@ jobs:
         ports: ["3306:3306"]
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["2.5","2.6", "2.8"]
+        rails: ["5.1", "5.2", "6.0"]
+        db: ["pg", "mysql"]
+    env:
+      BUNDLE_GEMFILE: "gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}"
     steps:
     - uses: actions/checkout@v1
 
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
       with:
-        version: 2.5.9
+        ruby-version: "${{ matrix.ruby }}"
 
     - name: Build App
       run: |
