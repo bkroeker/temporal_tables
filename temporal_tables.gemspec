@@ -19,6 +19,10 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rails", ">= 5.0", "< 7.1"
   gem.add_development_dependency "rspec", "~> 3.4"
-  gem.add_development_dependency "combustion", "~> 1.3.2"
+  gem.add_development_dependency "combustion", "~> 1.3.5"
   gem.add_development_dependency "gemika"
+  gem.add_development_dependency "pry"
+  gem.add_development_dependency "pg"
+  gem.add_development_dependency "mysql2"
+  gem.add_development_dependency "database_cleaner"
 end
