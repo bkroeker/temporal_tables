@@ -16,15 +16,15 @@ module TemporalTables
         # If it doesn't exist yet, create and initialize it, as well
         # as all dependent classes (through associations).
         def self.history
-          raise "Can't view history of history" if name =~ /History$/
+          raise "Can't view history of history" if /History$/.match?(name)
 
           history_class = "#{name}History"
           history_class.constantize
         rescue NameError
           # If the history class doesn't exist yet, create it
-          new_class = Class.new(self) do
+          new_class = Class.new(self) {
             include TemporalTables::TemporalClass
-          end
+          }
           segments = history_class.split("::")
           object_class = segments[0...-1].inject(Object) { |o, s| o.const_get(s) }
           object_class.const_set segments.last, new_class

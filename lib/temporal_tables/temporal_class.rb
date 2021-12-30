@@ -1,11 +1,13 @@
 module TemporalTables
   # This is mixed into all History classes.
   module TemporalClass
+    HISTORY_SUFFIX = "_h"
+
     def self.included(base)
       base.class_eval do
         base.extend ClassMethods
 
-        self.table_name += "_h"
+        self.table_name += HISTORY_SUFFIX
 
         cattr_accessor :visited_associations
         @@visited_associations = []
@@ -37,11 +39,10 @@ module TemporalTables
               # inferred from the class_name, but shouldn't be in this case.
               send(association.macro, association.name,
                 association.options.merge(
-                  class_name:  clazz.name,
+                  class_name: clazz.name,
                   foreign_key: association.foreign_key,
                   primary_key: clazz.orig_class.primary_key
-                )
-              )
+                ))
             end
           end
         end
@@ -54,7 +55,7 @@ module TemporalTables
       end
 
       def find_sti_class(type_name)
-        type_name += "History" unless type_name =~ /History\Z/
+        type_name += "History" unless /History\Z/.match?(type_name)
 
         begin
           super
@@ -89,7 +90,7 @@ module TemporalTables
     end
 
     def orig_obj
-      @orig_obj ||= orig_class.find_by_id orig_id
+      @orig_obj ||= orig_class.find_by_id(orig_id)
     end
 
     def prev

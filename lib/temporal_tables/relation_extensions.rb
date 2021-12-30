@@ -9,39 +9,33 @@ module TemporalTables
     end
 
     def at_value
-      if Rails::VERSION::MAJOR == 6 && Rails::VERSION::MINOR == 1
-        return @values.fetch(:at, nil) || Thread.current[:at_time]
+      if Rails::VERSION::MAJOR < 6
+        return get_value(:at) || Thread.current[:at_time]
       end
 
-      case Rails::VERSION::MINOR
-      when 0
-        @values.fetch(:at, nil) || Thread.current[:at_time]
-      else
-        get_value(:at) || Thread.current[:at_time]
-      end
+      @values.fetch(:at, nil) || Thread.current[:at_time]
     end
 
     def at_value=(value)
-      case Rails::VERSION::MINOR
-      when 0
-        @values[:at] = value
-      else
+      if Rails::VERSION::MAJOR < 6
         set_value(:at, value)
+      else
+        @values[:at] = value
       end
     end
 
-    def at(*args)
-      spawn.at!(*args)
+    def at(...)
+      spawn.at!(...)
     end
 
     def at!(value)
       self.at_value = value
-      self.where!(klass.build_temporal_constraint(value))
+      where!(klass.build_temporal_constraint(value))
     end
 
-    def to_sql(*args)
+    def to_sql(...)
       threadify_at do
-        super *args
+        super(...)
       end
     end
 
@@ -56,9 +50,9 @@ module TemporalTables
       result
     end
 
-    def limited_ids_for(*args)
+    def limited_ids_for(...)
       threadify_at do
-        super *args
+        super(...)
       end
     end
 
@@ -67,21 +61,21 @@ module TemporalTables
       #  MyClass.includes(:associations)
       # happens within this exec_queries call.  That's why we needed to
       # store the at_time in the thread above.
-      threadify_at do
-        super
-      end
+      #
+      result = threadify_at { super }
 
       if historical?
         # Store the at value on each record returned
-        @records.each do |r|
+        result.each do |r|
           r.at_value = at_value
         end
       end
-      @records
+
+      result
     end
 
     def historical?
-      table_name =~ /_h$/i && at_value
+      table_name =~ /#{TemporalTables::TemporalClass::HISTORY_SUFFIX}$/i && at_value
     end
 
     # Only needed for Rails 5.1.x
@@ -95,4 +89,4 @@ module TemporalTables
   end
 end
 
-ActiveRecord::Relation.prepend TemporalTables::RelationExtensions
+ActiveRecord::Relation.prepend(TemporalTables::RelationExtensions)
