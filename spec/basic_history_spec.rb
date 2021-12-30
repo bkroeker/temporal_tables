@@ -139,25 +139,4 @@ describe Person do
       end
     end
   end
-
-  # The following only tests non-integer ids for postgres (see schema.rb)
-  describe "when spawning and aging a creature with a non-integer id" do
-    let!(:cat) { Cat.create name: "Mr. Mittens", color: "black" }
-
-    before do
-      cat.lives.create started_at: 3.years.ago
-      @init_time = Time.now
-      cat.update name: "Old Mr. Mittens"
-      cat.lives.first.update ended_at: Time.now, death_reason: "fell into cauldron"
-      cat.lives.create started_at: Time.now
-    end
-
-    it "shows one life at the beginning" do
-      expect(cat.history.at(@init_time).last.lives.size).to eq(1)
-    end
-
-    it "shows two lives at the end" do
-      expect(cat.history.last.lives.size).to eq(2)
-    end
-  end
 end
