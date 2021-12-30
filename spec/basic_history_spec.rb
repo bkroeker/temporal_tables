@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Person do
   let(:emily) { Person.create name: "Emily" }
@@ -63,7 +63,7 @@ describe Person do
     describe "when preloading associations" do
       let(:orig_emily) { emily.history.at(@init_time).preload(:warts).first }
 
-      it 'should preload the correct time' do
+      it "should preload the correct time" do
         expect(orig_emily.warts).to be_empty
       end
     end
@@ -71,11 +71,12 @@ describe Person do
     describe "when eager_loading associations" do
       let(:orig_emily) { emily.history.at(@init_time).eager_load(:warts).first }
 
-      it 'should include the correct time' do
+      it "should include the correct time" do
+        require "pry"; binding.pry
         expect(orig_emily.warts).to be_empty
       end
 
-      it 'should generate sensible sql' do
+      it "should generate sensible sql" do
         sql = emily.history.at(@init_time).eager_load(:warts).where(Wart.history.arel_table[:hairiness].gteq(2)).to_sql.split(/(FROM)|(WHERE)|(ORDER)/)
         from = sql[2]
         where = sql[4]
