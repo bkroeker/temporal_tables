@@ -9,7 +9,7 @@ gem 'rspec', '~> 3.4'
 gem 'rake'
 gem 'byebug'
 gem 'database_cleaner'
-gem 'combustion', '= 0.9.1'
+gem 'combustion'
 gem 'gemika'
 
 # Gem under test

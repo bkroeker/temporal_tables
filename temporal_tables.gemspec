@@ -19,6 +19,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "rails", ">= 5.0", "< 6.1"
   gem.add_development_dependency "rspec", "~> 3.4"
-  gem.add_development_dependency "combustion", "~> 0.9.1"
+  gem.add_development_dependency "combustion", "~> 1"
   gem.add_development_dependency "gemika"
 end
