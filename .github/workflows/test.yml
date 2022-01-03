@@ -28,16 +28,16 @@ jobs:
         rails: ["5.1", "5.2", "5.2.4", "6.0"]
         db: ["pg", "mysql"]
     env:
-      BUNDLE_GEMFILE: "gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}"
+      BUNDLE_GEMFILE: ${{github.workspace}}/gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: "${{ matrix.ruby }}"
     - name: Bundle
       run: |
         gem install bundler:2.2.15
-        bundle install --no-deployment
+        bundle install
 
     - name: Run Tests
       env:
