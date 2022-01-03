@@ -36,7 +36,7 @@ module TemporalTables
               # history class.  The foreign key is explicitly set since it's
               # inferred from the class_name, but shouldn't be in this case.
               send(association.macro, association.name,
-                association.options.merge(
+                **association.options.merge(
                   class_name:  clazz.name,
                   foreign_key: association.foreign_key,
                   primary_key: clazz.orig_class.primary_key

@@ -1,5 +1,5 @@
 rvm:
-  - 2.5.7
+  - 3.0.0
 
 gemfile:
   - gemfiles/Gemfile.5.1.pg

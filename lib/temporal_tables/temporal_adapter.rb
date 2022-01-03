@@ -2,11 +2,11 @@ module TemporalTables
   module TemporalAdapter
     def create_table(table_name, options = {}, &block)
       if options[:temporal_bypass]
-        super table_name, options, &block
+        super(table_name, **options, &block)
       else
         skip_table = TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) || table_name.to_s =~ /_h$/
 
-        super table_name, options do |t|
+        super(table_name, **options) do |t|
           block.call t
 
           if TemporalTables.add_updated_by_field && !skip_table
@@ -14,7 +14,7 @@ module TemporalTables
             if updated_by_already_exists
               puts "consider adding #{table_name} to TemporalTables skip_table"
             else
-              t.column :updated_by, TemporalTables.updated_by_type
+              t.column(:updated_by, TemporalTables.updated_by_type)
             end
           end
         end
@@ -58,10 +58,10 @@ module TemporalTables
     end
 
     def drop_table(table_name, options = {})
-      super table_name, options
+      super(table_name, **options)
 
       if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), options
+        super(temporal_name(table_name), **options)
       end
     end
 
@@ -73,13 +73,13 @@ module TemporalTables
       super name, new_name
 
       if table_exists?(temporal_name(name))
-        super temporal_name(name), temporal_name(new_name)
+        super(temporal_name(name), temporal_name(new_name))
         create_temporal_triggers new_name
       end
     end
 
     def add_column(table_name, column_name, type, options = {})
-      super table_name, column_name, type, options
+      super(table_name, column_name, type, **options)
 
       if table_exists?(temporal_name(table_name))
         super temporal_name(table_name), column_name, type, options
@@ -88,7 +88,7 @@ module TemporalTables
     end
 
     def remove_column(table_name, *column_names)
-      super table_name, *column_names
+      super(table_name, *column_names)
 
       if table_exists?(temporal_name(table_name))
         super temporal_name(table_name), *column_names
@@ -97,7 +97,7 @@ module TemporalTables
     end
 
     def change_column(table_name, column_name, type, options = {})
-      super table_name, column_name, type, options
+      super(table_name, column_name, type, options)
 
       if table_exists?(temporal_name(table_name))
         super temporal_name(table_name), column_name, type, options
@@ -106,7 +106,7 @@ module TemporalTables
     end
 
     def rename_column(table_name, column_name, new_column_name)
-      super table_name, column_name, new_column_name
+      super(table_name, column_name, new_column_name)
 
       if table_exists?(temporal_name(table_name))
         super temporal_name(table_name), column_name, new_column_name
@@ -115,7 +115,7 @@ module TemporalTables
     end
 
     def add_index(table_name, column_name, options = {})
-      super table_name, column_name, options
+      super(table_name, column_name, options)
 
       if table_exists?(temporal_name(table_name))
         column_names = Array.wrap(column_name)
@@ -126,7 +126,7 @@ module TemporalTables
     end
 
     def remove_index(table_name, options = {})
-      super table_name, options
+      super(table_name, options)
 
       if table_exists?(temporal_name(table_name))
         idx_name = temporal_index_name(index_name(table_name, options))
