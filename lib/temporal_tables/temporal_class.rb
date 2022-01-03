@@ -51,7 +51,7 @@ module TemporalTables
 
     module STIWithHistory
       def sti_name
-        super.sub /History$/, ""
+        super.sub(/History$/, "")
       end
 
       def find_sti_class(type_name)
@@ -75,9 +75,9 @@ module TemporalTables
       end
 
       def build_temporal_constraint(at_value)
-        arel_table[:eff_to].gteq(at_value).and(
-          arel_table[:eff_from].lteq(at_value)
-        )
+        arel_table[:eff_to]
+          .gteq(at_value)
+          .and(arel_table[:eff_from].lteq(at_value))
       end
     end
 

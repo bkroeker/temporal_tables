@@ -31,4 +31,3 @@ when 5
     ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
   end
 end
-

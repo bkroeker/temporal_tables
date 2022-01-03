@@ -19,7 +19,11 @@ end
 
 def database_config_from_gems(file_location)
   config = YAML.load_file(file_location)
-  {Rails.env.to_s => config.slice(adapter_name)}
+  data = config.slice(adapter_name)
+  if Rails::VERSION::MAJOR < 6
+    return {Rails.env.to_s => data[adapter_name]}
+  end
+  {Rails.env.to_s => data}
 end
 
 File.write(
@@ -36,9 +40,9 @@ begin
   Combustion.initialize! :active_record
 rescue ActiveRecord::RecordNotUnique => e
 end
-# DatabaseCleaner.strategy = :deletion
+
 RSpec.configure do |config|
   config.before(:each) do
-    DatabaseCleaner.clean_with(:deletion)
+    DatabaseCleaner.clean
   end
 end

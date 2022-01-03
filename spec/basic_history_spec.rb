@@ -12,7 +12,10 @@ describe Person do
 
   describe "upon making significant life changes" do
     let!(:coven) { Coven.create name: "Double Double Toil & Trouble" }
-    let!(:wart) { Wart.create person: emily, hairiness: 3 }
+    let!(:wart) {
+      sleep 0.1
+      Wart.create(person: emily, hairiness: 3)
+    }
 
     before do
       emily.update name: "Grunthilda", coven: coven
@@ -72,12 +75,17 @@ describe Person do
       let(:orig_emily) { emily.history.at(@init_time).eager_load(:warts).first }
 
       it "should include the correct time" do
-        require "pry"; binding.pry
         expect(orig_emily.warts).to be_empty
       end
 
       it "should generate sensible sql" do
-        sql = emily.history.at(@init_time).eager_load(:warts).where(Wart.history.arel_table[:hairiness].gteq(2)).to_sql.split(/(FROM)|(WHERE)|(ORDER)/)
+        sql = emily.history
+          .at(@init_time)
+          .eager_load(:warts)
+          .where("warts.hairiness >= ?", 2)
+          .to_sql
+          .split(/(FROM)|(WHERE)|(ORDER)/)
+
         from = sql[2]
         where = sql[4]
 
