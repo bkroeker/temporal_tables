@@ -25,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["2.5", "2.6", "2.7"]
-        rails: ["5.1", "5.2", "6.0"]
+        rails: ["5.1", "5.2", "5.2.4","6.0"]
         db: ["pg", "mysql"]
     env:
       BUNDLE_GEMFILE: "gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}"
