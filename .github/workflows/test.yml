@@ -39,10 +39,6 @@ jobs:
         gem install bundler:2.2.15
         bundle install --no-deployment
 
-    - name: Setup DB config
-      run: |
-        mv spec/internal/config/database.ci.yml spec/internal/config/database.yml
-
     - name: Run Tests
       env:
         PGHOST: localhost
