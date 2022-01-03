@@ -16,11 +16,7 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-#<<<<<<< Updated upstream
-  #gem.add_dependency "rails", ">= 5.0", "< 7.1"
-#=======
-  gem.add_dependency "rails", ">= 5.2", "< 6.0"
-#>>>>>>> Stashed changes
+  gem.add_dependency "rails", ">= 5.0", "< 7.1"
   gem.add_development_dependency "rspec", "~> 3.4"
   gem.add_development_dependency "combustion", "~> 1.3.5"
   gem.add_development_dependency "gemika"
