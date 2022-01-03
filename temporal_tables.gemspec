@@ -21,4 +21,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rspec", "~> 3.4"
   gem.add_development_dependency "combustion", "~> 1"
   gem.add_development_dependency "gemika"
+  gem.add_development_dependency "pry"
+  gem.add_development_dependency "pg"
+  gem.add_development_dependency "mysql2"
+  gem.add_development_dependency "database_cleaner"
 end
