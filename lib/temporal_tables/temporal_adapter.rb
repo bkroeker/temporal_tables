@@ -180,7 +180,7 @@ module TemporalTables
         else
           index_name_exists?(temporal_name(table_name), index_name)
         end
-      when 6
+      when 6, 7
         index_name_exists?(temporal_name(table_name), index_name)
       else
         raise "Rails version not supported"

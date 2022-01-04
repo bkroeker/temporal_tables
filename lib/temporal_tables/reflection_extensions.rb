@@ -39,3 +39,10 @@ when 6
   end
 end
 
+case Rails::VERSION::MAJOR
+when 7
+  case Rails::VERSION::MINOR
+  when 0
+    ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
+  end
+end
