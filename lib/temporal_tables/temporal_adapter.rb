@@ -115,7 +115,7 @@ module TemporalTables
     end
 
     def add_index(table_name, column_name, options = {})
-      super(table_name, column_name, options)
+      super(table_name, column_name, **options)
 
       if table_exists?(temporal_name(table_name))
         column_names = Array.wrap(column_name)

@@ -9,21 +9,21 @@ module TemporalTables
     end
 
     def at_value
-      case Rails::VERSION::MINOR
-      when 0
-        @values.fetch(:at, nil) || Thread.current[:at_time]
-      else
-        get_value(:at) || Thread.current[:at_time]
+      if rails_5_0?
+        return get_value(:at) || Thread.current[:at_time]
       end
+
+      @values.fetch(:at, nil) || Thread.current[:at_time]
+    end
+
+    def rails_5_0?
+      Rails::VERSION::MAJOR < 6 && Rails::VERSION::MINOR == 0
     end
 
     def at_value=(value)
-      case Rails::VERSION::MINOR
-      when 0
-        @values[:at] = value
-      else
-        set_value(:at, value)
-      end
+      return set_value(:at, value) if rails_5_0?
+
+      @values[:at] = value
     end
 
     def at(*args)
@@ -36,9 +36,7 @@ module TemporalTables
     end
 
     def to_sql(*args)
-      threadify_at do
-        super *args
-      end
+      threadify_at { super(*args) }
     end
 
     def threadify_at
@@ -53,9 +51,7 @@ module TemporalTables
     end
 
     def limited_ids_for(*args)
-      threadify_at do
-        super *args
-      end
+      threadify_at { super(*args) }
     end
 
     def exec_queries
@@ -63,17 +59,16 @@ module TemporalTables
       #  MyClass.includes(:associations)
       # happens within this exec_queries call.  That's why we needed to
       # store the at_time in the thread above.
-      threadify_at do
-        super
-      end
+      records = threadify_at { super }
 
       if historical?
         # Store the at value on each record returned
-        @records.each do |r|
+        records.each do |r|
           r.at_value = at_value
         end
       end
-      @records
+      @records = records
+      records
     end
 
     def historical?
