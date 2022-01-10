@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
 
     services:
@@ -21,25 +21,30 @@ jobs:
         ports: ["3306:3306"]
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["2.5", "2.6", "2.7"]
+        rails: ["5.1", "5.2", "6.0"]
+        db: ["pg", "mysql"]
+    env:
+      BUNDLE_GEMFILE: "gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}"
     steps:
     - uses: actions/checkout@v1
-
-    - name: Setup Ruby
-      uses: actions/setup-ruby@v1.0.0
+    - uses: ruby/setup-ruby@v1
       with:
-        version: 2.5.7
-
-    - name: Build App
+        ruby-version: "${{ matrix.ruby }}"
+    - name: Bundle
       run: |
-        gem install bundler
-        gem install bundler -v 1.17.3
-        bundle install --jobs 4 --retry 3
-        bundle exec rake matrix:install
+        gem install bundler:2.2.15
+        bundle install --no-deployment
+
+    - name: Setup DB config
+      run: |
         mv spec/internal/config/database.ci.yml spec/internal/config/database.yml
 
     - name: Run Tests
       env:
         PGHOST: localhost
         PGUSER: postgres
-      run: |
-        bundle exec rake matrix:spec
+      run: bundle exec rspec
