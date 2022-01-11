@@ -172,19 +172,7 @@ module TemporalTables
     end
 
     def temporal_index_exists?(table_name, index_name)
-      case Rails::VERSION::MAJOR
-      when 5
-        case Rails::VERSION::MINOR
-        when 0
-          index_name_exists?(temporal_name(table_name), index_name, false)
-        else
-          index_name_exists?(temporal_name(table_name), index_name)
-        end
-      when 6, 7
-        index_name_exists?(temporal_name(table_name), index_name)
-      else
-        raise "Rails version not supported"
-      end
+      index_name_exists?(temporal_name(table_name), index_name)
     end
   end
 end

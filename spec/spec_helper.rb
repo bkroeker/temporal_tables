@@ -18,9 +18,6 @@ end
 def database_config_from_gems(file_location)
   config = YAML.load_file(file_location)
   data = config.slice(adapter_name)
-  if Rails::VERSION::MAJOR < 6
-    return {Rails.env.to_s => data[adapter_name]}
-  end
   {Rails.env.to_s => data}
 end
 

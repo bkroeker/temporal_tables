@@ -1,5 +1,5 @@
 module TemporalTables
-  # This is required for eager_load to work in Rails 6.0
+  # This is required for eager_load to work
   module ArelTable
     def create_join(to, constraint = nil, klass = Arel::Nodes::InnerJoin)
       join = super
@@ -13,7 +13,4 @@ module TemporalTables
   end
 end
 
-case Rails::VERSION::MAJOR
-when 6
-  Arel::Table.prepend TemporalTables::ArelTable
-end
+Arel::Table.prepend TemporalTables::ArelTable

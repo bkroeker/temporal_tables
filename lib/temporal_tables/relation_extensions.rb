@@ -9,20 +9,10 @@ module TemporalTables
     end
 
     def at_value
-      if rails_5_0?
-        return get_value(:at) || Thread.current[:at_time]
-      end
-
       @values.fetch(:at, nil) || Thread.current[:at_time]
     end
 
-    def rails_5_0?
-      Rails::VERSION::MAJOR < 6 && Rails::VERSION::MINOR == 0
-    end
-
     def at_value=(value)
-      return set_value(:at, value) if rails_5_0?
-
       @values[:at] = value
     end
 
