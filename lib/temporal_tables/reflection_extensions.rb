@@ -24,25 +24,12 @@ module TemporalTables
   end
 end
 
-case Rails::VERSION::MAJOR
-when 5
-  case Rails::VERSION::MINOR
-  when 2
-    ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
-  end
+prepend_reflection = case Rails::VERSION::MAJOR
+  when 5
+    Rails::VERSION::MINOR >= 2
+  when 6
+    Rails::VERSION::MINOR >= 1
+  else
+    true
 end
-case Rails::VERSION::MAJOR
-when 6
-  case Rails::VERSION::MINOR
-  when 1
-    ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
-  end
-end
-
-case Rails::VERSION::MAJOR
-when 7
-  case Rails::VERSION::MINOR
-  when 0
-    ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
-  end
-end
+ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions if prepend_reflection
