@@ -1,5 +1,5 @@
 module TemporalTables
-  # This is required for eager_load to work in Rails 5.2.x
+  # This is required for eager_load to work in Rails 5.2.x, 6.1
   module AbstractReflectionExtensions
     if ActiveRecord.version > ::Gem::Version.new("5.2.3")
       def join_scope(table, foreign_table, foreign_klass)
@@ -24,10 +24,12 @@ module TemporalTables
   end
 end
 
-case Rails::VERSION::MAJOR
-when 5
-  case Rails::VERSION::MINOR
-  when 2
-    ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions
-  end
+prepend_reflection = case Rails::VERSION::MAJOR
+  when 5
+    Rails::VERSION::MINOR >= 2
+  when 6
+    Rails::VERSION::MINOR >= 1
+  else
+    true
 end
+ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions if prepend_reflection
