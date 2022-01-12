@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # Stores the time from the "at" field into each of the resulting objects
   # so that it can be carried forward in subsequent queries.
@@ -22,7 +24,7 @@ module TemporalTables
 
     def at!(value)
       self.at_value = value
-      self.where!(klass.build_temporal_constraint(value))
+      where!(klass.build_temporal_constraint(value))
     end
 
     def to_sql(*args)

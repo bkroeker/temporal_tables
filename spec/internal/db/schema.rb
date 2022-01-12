@@ -1,9 +1,13 @@
-postgres = ActiveRecord::Base.connection.class.name == "ActiveRecord::ConnectionAdapters::PostgreSQLAdapter"
+# frozen_string_literal: true
 
-ActiveRecord::Schema.define do
-  if postgres
-    enable_extension "pgcrypto"
-  end
+begin
+  postgres = ActiveRecord::Base.connection.instance_of?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+rescue NameError
+  postgres = false
+end
+
+ActiveRecord::Schema.define do # rubocop:disable Metrics/BlockLength
+  enable_extension 'pgcrypto' if postgres
 
   create_table :people, temporal: true, force: true do |t|
     t.belongs_to :coven

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # This hooks in a "history" method to ActiveRecord::Base which will
   # return the class's History class.  The history class extends the original
@@ -25,7 +27,7 @@ module TemporalTables
           new_class = Class.new(self) do
             include TemporalTables::TemporalClass
           end
-          segments = history_class.split("::")
+          segments = history_class.split('::')
           object_class = segments[0...-1].inject(Object) { |o, s| o.const_get(s) }
           object_class.const_set segments.last, new_class
 
@@ -47,4 +49,4 @@ module TemporalTables
   end
 end
 
-ActiveRecord::Base.send :include, TemporalTables::HistoryHook
+ActiveRecord::Base.include TemporalTables::HistoryHook

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   module Whodunnit
     def self.included(base)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   module ConnectionAdapters
     module PostgreSQLAdapter
@@ -18,7 +20,7 @@ module TemporalTables
               cur_time := localtimestamp;
 
               insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
-              values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
+              values (#{column_names.collect { |c| "new.#{c}" }.join(', ')}, cur_time);
 
               return null;
             end
@@ -41,7 +43,7 @@ module TemporalTables
                 and eff_to = '9999-12-31';
 
               insert into #{temporal_name(table_name)} (#{column_list(column_names)}, eff_from)
-              values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, cur_time);
+              values (#{column_names.collect { |c| "new.#{c}" }.join(', ')}, cur_time);
 
               return null;
             end

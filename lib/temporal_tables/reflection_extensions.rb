@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # This is required for eager_load to work in 6.1
   module AbstractReflectionExtensions
@@ -12,5 +14,5 @@ module TemporalTables
   end
 end
 
-prepend_reflection = ActiveRecord.version > ::Gem::Version.new("6.1.0")
+prepend_reflection = ActiveRecord.version > ::Gem::Version.new('6.1.0')
 ActiveRecord::Reflection::AbstractReflection.prepend TemporalTables::AbstractReflectionExtensions if prepend_reflection

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   module TemporalAdapter
     def create_table(table_name, options = {}, &block)
@@ -10,7 +12,7 @@ module TemporalTables
           block.call t
 
           if TemporalTables.add_updated_by_field && !skip_table
-            updated_by_already_exists = t.columns.any? { |c| c.name == "updated_by" }
+            updated_by_already_exists = t.columns.any? { |c| c.name == 'updated_by' }
             if updated_by_already_exists
               puts "consider adding #{table_name} to TemporalTables skip_table"
             else
@@ -26,15 +28,17 @@ module TemporalTables
     end
 
     def add_temporal_table(table_name, options = {})
-      create_table temporal_name(table_name), options.merge(id: false, primary_key: "history_id", temporal_bypass: true) do |t|
-        if options[:id] != false
-          t.column :id, options.fetch(:id, :integer)
-        end
+      create_table(
+        temporal_name(table_name),
+        options.merge(id: false, primary_key: 'history_id', temporal_bypass: true)
+      ) do |t|
+        t.column :id, options.fetch(:id, :integer) if options[:id] != false
         t.datetime :eff_from, null: false, limit: 6
-        t.datetime :eff_to,   null: false, limit: 6, default: "9999-12-31"
+        t.datetime :eff_to,   null: false, limit: 6, default: '9999-12-31'
 
-        for c in columns(table_name)
-          next if c.name == "id"
+        columns(table_name).each do |c|
+          next if c.name == 'id'
+
           t.send c.type, c.name, limit: c.limit
         end
       end
@@ -60,15 +64,11 @@ module TemporalTables
     def drop_table(table_name, options = {})
       super(table_name, **options)
 
-      if table_exists?(temporal_name(table_name))
-        super(temporal_name(table_name), **options)
-      end
+      super(temporal_name(table_name), **options) if table_exists?(temporal_name(table_name))
     end
 
     def rename_table(name, new_name)
-      if table_exists?(temporal_name(name))
-        drop_temporal_triggers name
-      end
+      drop_temporal_triggers name if table_exists?(temporal_name(name))
 
       super name, new_name
 
@@ -119,7 +119,7 @@ module TemporalTables
 
       if table_exists?(temporal_name(table_name))
         column_names = Array.wrap(column_name)
-        idx_name = temporal_index_name(options[:name] || index_name(table_name, :column => column_names))
+        idx_name = temporal_index_name(options[:name] || index_name(table_name, column: column_names))
 
         super temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
       end
@@ -131,7 +131,7 @@ module TemporalTables
       if table_exists?(temporal_name(table_name))
         idx_name = temporal_index_name(index_name(table_name, options))
 
-        super temporal_name(table_name), :name => idx_name
+        super temporal_name(table_name), name: idx_name
       end
     end
 
@@ -141,16 +141,17 @@ module TemporalTables
       indexes.each do |index|
         index_name = temporal_index_name(index.name)
 
-        unless temporal_index_exists?(table_name, index_name)
-          add_index(
-            temporal_name(table_name),
-            index.columns, {
-              # exclude unique constraints for temporal tables
-              :name   => index_name,
-              :length => index.lengths,
-              :order  => index.orders
-          })
-        end
+        next if temporal_index_exists?(table_name, index_name)
+
+        add_index(
+          temporal_name(table_name),
+          index.columns, {
+            # exclude unique constraints for temporal tables
+            name: index_name,
+            length: index.lengths,
+            order: index.orders
+          }
+        )
       end
     end
 
@@ -158,17 +159,17 @@ module TemporalTables
       "#{table_name}_h"
     end
 
-    def create_temporal_triggers(table_name)
-      raise NotImplementedError, "create_temporal_triggers is not implemented"
+    def create_temporal_triggers(_table_name)
+      raise NotImplementedError, 'create_temporal_triggers is not implemented'
     end
 
-    def drop_temporal_triggers(table_name)
-      raise NotImplementedError, "drop_temporal_triggers is not implemented"
+    def drop_temporal_triggers(_table_name)
+      raise NotImplementedError, 'drop_temporal_triggers is not implemented'
     end
 
     # It's important not to increase the length of the returned string.
     def temporal_index_name(index_name)
-      index_name.to_s.sub(/^index/, "ind_h").sub(/_ix(\d+)$/, '_hi\1')
+      index_name.to_s.sub(/^index/, 'ind_h').sub(/_ix(\d+)$/, '_hi\1')
     end
 
     def temporal_index_exists?(table_name, index_name)

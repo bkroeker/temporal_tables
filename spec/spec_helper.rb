@@ -1,24 +1,26 @@
-require "gemika"
-require "combustion"
-require "yaml"
+# frozen_string_literal: true
+
+require 'gemika'
+require 'combustion'
+require 'yaml'
 
 Dir["#{File.dirname(__FILE__)}/extensions/*.rb"].sort.each { |f| require f }
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].sort.each { |f| require f }
-READ_DATABASE_CONFIG_LOCATION = "spec/internal/config/database.ci.yml"
-WRITE_DATABASE_CONFIG_LOCATION = "spec/internal/config/database.yml"
+READ_DATABASE_CONFIG_LOCATION = 'spec/internal/config/database.ci.yml'
+WRITE_DATABASE_CONFIG_LOCATION = 'spec/internal/config/database.yml'
 
 def adapter_name
-  if Gemika::Env.gem?("mysql2")
-    "mysql"
+  if Gemika::Env.gem?('mysql2')
+    'mysql'
   else
-    "postgresql"
+    'postgresql'
   end
 end
 
 def database_config_from_gems(file_location)
   config = YAML.load_file(file_location)
   data = config.slice(adapter_name)
-  {Rails.env.to_s => data}
+  { Rails.env.to_s => data }
 end
 
 original_env = Rails.env
@@ -38,7 +40,8 @@ Rails.env = original_env
 
 begin
   Combustion.initialize! :active_record
-rescue ActiveRecord::RecordNotUnique => e
+rescue ActiveRecord::RecordNotUnique
+  # noop
 end
 
 RSpec.configure do |config|
