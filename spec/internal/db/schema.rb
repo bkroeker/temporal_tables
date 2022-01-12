@@ -6,7 +6,7 @@ rescue NameError
   postgres = false
 end
 
-ActiveRecord::Schema.define do # rubocop:disable Metrics/BlockLength
+ActiveRecord::Schema.define do
   enable_extension 'pgcrypto' if postgres
 
   create_table :people, temporal: true, force: true do |t|

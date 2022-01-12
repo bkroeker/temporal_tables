@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module TemporalTables
-  module TemporalAdapter
-    def create_table(table_name, options = {}, &block)
+  module TemporalAdapter # rubocop:disable Metrics/ModuleLength
+    def create_table(table_name, options = {}, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if options[:temporal_bypass]
         super(table_name, **options, &block)
       else
@@ -14,7 +14,7 @@ module TemporalTables
           if TemporalTables.add_updated_by_field && !skip_table
             updated_by_already_exists = t.columns.any? { |c| c.name == 'updated_by' }
             if updated_by_already_exists
-              puts "consider adding #{table_name} to TemporalTables skip_table"
+              puts "consider adding #{table_name} to TemporalTables skip_table" # rubocop:disable Rails/Output
             else
               t.column(:updated_by, TemporalTables.updated_by_type)
             end
@@ -27,7 +27,7 @@ module TemporalTables
       end
     end
 
-    def add_temporal_table(table_name, options = {})
+    def add_temporal_table(table_name, options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       create_table(
         temporal_name(table_name),
         options.merge(id: false, primary_key: 'history_id', temporal_bypass: true)
@@ -55,10 +55,10 @@ module TemporalTables
     end
 
     def remove_temporal_table(table_name)
-      if table_exists?(temporal_name(table_name))
-        drop_temporal_triggers table_name
-        drop_table_without_temporal temporal_name(table_name)
-      end
+      return unless table_exists?(temporal_name(table_name))
+
+      drop_temporal_triggers table_name
+      drop_table_without_temporal temporal_name(table_name)
     end
 
     def drop_table(table_name, options = {})
@@ -72,70 +72,68 @@ module TemporalTables
 
       super name, new_name
 
-      if table_exists?(temporal_name(name))
-        super(temporal_name(name), temporal_name(new_name))
-        create_temporal_triggers new_name
-      end
+      return unless table_exists?(temporal_name(name))
+
+      super(temporal_name(name), temporal_name(new_name))
+      create_temporal_triggers new_name
     end
 
     def add_column(table_name, column_name, type, options = {})
       super(table_name, column_name, type, **options)
 
-      if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), column_name, type, options
-        create_temporal_triggers table_name
-      end
+      return unless table_exists?(temporal_name(table_name))
+
+      super temporal_name(table_name), column_name, type, options
+      create_temporal_triggers table_name
     end
 
     def remove_column(table_name, *column_names)
       super(table_name, *column_names)
 
-      if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), *column_names
-        create_temporal_triggers table_name
-      end
+      return unless table_exists?(temporal_name(table_name))
+
+      super temporal_name(table_name), *column_names
+      create_temporal_triggers table_name
     end
 
     def change_column(table_name, column_name, type, options = {})
       super(table_name, column_name, type, options)
 
-      if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), column_name, type, options
-        # Don't need to update triggers here...
-      end
+      return unless table_exists?(temporal_name(table_name))
+
+      super temporal_name(table_name), column_name, type, options
+      # Don't need to update triggers here...
     end
 
     def rename_column(table_name, column_name, new_column_name)
       super(table_name, column_name, new_column_name)
 
-      if table_exists?(temporal_name(table_name))
-        super temporal_name(table_name), column_name, new_column_name
-        create_temporal_triggers table_name
-      end
+      return unless table_exists?(temporal_name(table_name))
+
+      super temporal_name(table_name), column_name, new_column_name
+      create_temporal_triggers table_name
     end
 
     def add_index(table_name, column_name, options = {})
       super(table_name, column_name, **options)
 
-      if table_exists?(temporal_name(table_name))
-        column_names = Array.wrap(column_name)
-        idx_name = temporal_index_name(options[:name] || index_name(table_name, column: column_names))
+      return unless table_exists?(temporal_name(table_name))
 
-        super temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
-      end
+      column_names = Array.wrap(column_name)
+      idx_name = temporal_index_name(options[:name] || index_name(table_name, column: column_names))
+      super temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
     end
 
     def remove_index(table_name, options = {})
       super(table_name, options)
 
-      if table_exists?(temporal_name(table_name))
-        idx_name = temporal_index_name(index_name(table_name, options))
+      return unless table_exists?(temporal_name(table_name))
 
-        super temporal_name(table_name), name: idx_name
-      end
+      idx_name = temporal_index_name(index_name(table_name, options))
+      super temporal_name(table_name), name: idx_name
     end
 
-    def create_temporal_indexes(table_name)
+    def create_temporal_indexes(table_name) # rubocop:disable Metrics/MethodLength
       indexes = ActiveRecord::Base.connection.indexes(table_name)
 
       indexes.each do |index|

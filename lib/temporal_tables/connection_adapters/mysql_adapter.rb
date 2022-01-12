@@ -9,7 +9,7 @@ module TemporalTables
         execute "drop trigger #{table_name}_ad"
       end
 
-      def create_temporal_triggers(table_name)
+      def create_temporal_triggers(table_name) # rubocop:disable Metrics/MethodLength
         column_names = columns(table_name).map(&:name)
 
         execute %{

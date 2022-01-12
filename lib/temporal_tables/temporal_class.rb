@@ -3,14 +3,14 @@
 module TemporalTables
   # This is mixed into all History classes.
   module TemporalClass
-    def self.included(base)
+    def self.included(base) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       base.class_eval do
         base.extend ClassMethods
 
         self.table_name += '_h'
 
         cattr_accessor :visited_associations
-        @@visited_associations = []
+        @visited_associations = []
 
         # The at_value field stores the time from the query that yielded
         # this record.
@@ -25,11 +25,11 @@ module TemporalTables
         # Iterates all associations, makes sure their history classes are
         # created and initialized, and modifies the associations to point
         # to the target classes' history classes.
-        def self.temporalize_associations!
+        def self.temporalize_associations! # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           reflect_on_all_associations.dup.each do |association|
-            next if @@visited_associations.include?(association.name) || association.options[:polymorphic]
+            next if @visited_associations.include?(association.name) || association.options[:polymorphic]
 
-            @@visited_associations << association.name
+            @visited_associations << association.name
 
             # Calling .history here will ensure that the history class
             # for this association is created and initialized

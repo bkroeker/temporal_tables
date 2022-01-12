@@ -78,7 +78,14 @@ describe Person do
       end
 
       it 'should generate sensible sql' do
-        sql = emily.history.at(@init_time).eager_load(:warts).where(Wart.history.arel_table[:hairiness].gteq(2)).to_sql.split(/(FROM)|(WHERE)|(ORDER)/)
+        sql =
+          emily
+          .history
+          .at(@init_time)
+          .eager_load(:warts)
+          .where(Wart.history.arel_table[:hairiness].gteq(2))
+          .to_sql
+          .split(/(FROM)|(WHERE)|(ORDER)/)
         from = sql[2]
         where = sql[4]
 
