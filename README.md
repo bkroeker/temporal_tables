@@ -4,8 +4,6 @@
 
 Easily recall what your data looked like at any point in the past!  TemporalTables sets up and maintains history tables to track all temporal changes to to your data.
 
-Currently tested on Ruby 2.5.7, Rails 5.1 - 6.0, Postgres 11.5, MySQL 8.0
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -105,11 +103,11 @@ grunthilda.history.map { |p| "#{p.eff_from}: #{p.to_s}" }
 
 You can query for records as they were at any point in the past by calling `at`.
 ``` ruby
- Person.history.at(2.years.ago).where(id: 1).first.name #=> "Grunthilda"
+Person.history.at(2.years.ago).where(id: 1).first.name #=> "Grunthilda"
 
- # alternatively:
- grunthilda = Person.find(1)
- grunthilda.history.at(2.years.ago).first.name #=> "Grunthilda"
+# alternatively:
+grunthilda = Person.find(1)
+grunthilda.history.at(2.years.ago).first.name #=> "Grunthilda"
 ```
 
 Associations work too.
