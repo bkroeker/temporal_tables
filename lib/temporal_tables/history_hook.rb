@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # This hooks in a "history" method to ActiveRecord::Base which will
   # return the class's History class.  The history class extends the original
@@ -8,14 +10,15 @@ module TemporalTables
   #  end
   #
   #  Person         #=> Person(id: integer, name: string)
-  #  Person.history #=> PersonHistory(history_id: integer, id: integer, name: string, eff_from: datetime, eff_to: datetime)
+  #  Person.history #=> PersonHistory(history_id: integer, id: integer,
+  #                     name: string, eff_from: datetime, eff_to: datetime)
   module HistoryHook
-    def self.included(base)
+    def self.included(base) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       base.class_eval do
         # Return this class's history class.
         # If it doesn't exist yet, create and initialize it, as well
         # as all dependent classes (through associations).
-        def self.history
+        def self.history # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           raise "Can't view history of history" if name =~ /History$/
 
           history_class = "#{name}History"
@@ -25,7 +28,7 @@ module TemporalTables
           new_class = Class.new(self) do
             include TemporalTables::TemporalClass
           end
-          segments = history_class.split("::")
+          segments = history_class.split('::')
           object_class = segments[0...-1].inject(Object) { |o, s| o.const_get(s) }
           object_class.const_set segments.last, new_class
 
@@ -47,4 +50,4 @@ module TemporalTables
   end
 end
 
-ActiveRecord::Base.send :include, TemporalTables::HistoryHook
+ActiveRecord::Base.include TemporalTables::HistoryHook

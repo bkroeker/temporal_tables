@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   module ConnectionAdapters
     module AbstractMysqlAdapter
@@ -7,7 +9,7 @@ module TemporalTables
         execute "drop trigger #{table_name}_ad"
       end
 
-      def create_temporal_triggers(table_name)
+      def create_temporal_triggers(table_name) # rubocop:disable Metrics/MethodLength
         column_names = columns(table_name).map(&:name)
 
         execute %{
@@ -17,7 +19,7 @@ module TemporalTables
             set @current_time = utc_timestamp(6);
 
             insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
-            values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, @current_time);
+            values (#{column_names.collect { |c| "new.#{c}" }.join(', ')}, @current_time);
 
           end
         }
@@ -33,7 +35,7 @@ module TemporalTables
             and eff_to = '9999-12-31';
 
             insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
-            values (#{column_names.collect {|c| "new.#{c}"}.join(', ')}, @current_time);
+            values (#{column_names.collect { |c| "new.#{c}" }.join(', ')}, @current_time);
 
           end
         }

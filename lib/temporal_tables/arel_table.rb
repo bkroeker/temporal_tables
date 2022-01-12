@@ -1,19 +1,20 @@
+# frozen_string_literal: true
+
 module TemporalTables
-  # This is required for eager_load to work in Rails 6.0
+  # This is required for eager_load to work
   module ArelTable
     def create_join(to, constraint = nil, klass = Arel::Nodes::InnerJoin)
       join = super
-      if at_value = Thread.current[:at_time]
-        join = join.
-          and(to[:eff_to].gteq(at_value)).
-          and(to[:eff_from].lteq(at_value))
+      at_value = Thread.current[:at_time]
+      if at_value
+        join =
+          join
+          .and(to[:eff_to].gteq(at_value))
+          .and(to[:eff_from].lteq(at_value))
       end
       join
     end
   end
 end
 
-case Rails::VERSION::MAJOR
-when 6
-  Arel::Table.prepend TemporalTables::ArelTable
-end
+Arel::Table.prepend TemporalTables::ArelTable

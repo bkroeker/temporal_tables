@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # Stores the time from the "at" field into each of the resulting objects
   # so that it can be carried forward in subsequent queries.
@@ -9,20 +11,10 @@ module TemporalTables
     end
 
     def at_value
-      if rails_5_0?
-        return get_value(:at) || Thread.current[:at_time]
-      end
-
       @values.fetch(:at, nil) || Thread.current[:at_time]
     end
 
-    def rails_5_0?
-      Rails::VERSION::MAJOR < 6 && Rails::VERSION::MINOR == 0
-    end
-
     def at_value=(value)
-      return set_value(:at, value) if rails_5_0?
-
       @values[:at] = value
     end
 
@@ -32,7 +24,7 @@ module TemporalTables
 
     def at!(value)
       self.at_value = value
-      self.where!(klass.build_temporal_constraint(value))
+      where!(klass.build_temporal_constraint(value))
     end
 
     def to_sql(*args)

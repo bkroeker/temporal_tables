@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # Uses the at time when fetching preloaded records
   module PreloaderExtensions

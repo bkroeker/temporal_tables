@@ -1,14 +1,16 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # This is mixed into all History classes.
   module TemporalClass
-    def self.included(base)
+    def self.included(base) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       base.class_eval do
         base.extend ClassMethods
 
-        self.table_name += "_h"
+        self.table_name += '_h'
 
         cattr_accessor :visited_associations
-        @@visited_associations = []
+        @visited_associations = []
 
         # The at_value field stores the time from the query that yielded
         # this record.
@@ -23,26 +25,27 @@ module TemporalTables
         # Iterates all associations, makes sure their history classes are
         # created and initialized, and modifies the associations to point
         # to the target classes' history classes.
-        def self.temporalize_associations!
+        def self.temporalize_associations! # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
           reflect_on_all_associations.dup.each do |association|
-            unless @@visited_associations.include?(association.name) || association.options[:polymorphic]
-              @@visited_associations << association.name
+            next if @visited_associations.include?(association.name) || association.options[:polymorphic]
 
-              # Calling .history here will ensure that the history class
-              # for this association is created and initialized
-              clazz = association.class_name.constantize.history
+            @visited_associations << association.name
 
-              # Recreate the association, updating it to point at the
-              # history class.  The foreign key is explicitly set since it's
-              # inferred from the class_name, but shouldn't be in this case.
-              send(association.macro, association.name,
-                **association.options.merge(
-                  class_name:  clazz.name,
-                  foreign_key: association.foreign_key,
-                  primary_key: clazz.orig_class.primary_key
-                )
+            # Calling .history here will ensure that the history class
+            # for this association is created and initialized
+            clazz = association.class_name.constantize.history
+
+            # Recreate the association, updating it to point at the
+            # history class.  The foreign key is explicitly set since it's
+            # inferred from the class_name, but shouldn't be in this case.
+            send(
+              association.macro, association.name,
+              **association.options.merge(
+                class_name: clazz.name,
+                foreign_key: association.foreign_key,
+                primary_key: clazz.orig_class.primary_key
               )
-            end
+            )
           end
         end
       end
@@ -50,11 +53,11 @@ module TemporalTables
 
     module STIWithHistory
       def sti_name
-        super.sub /History$/, ""
+        super.sub(/History$/, '')
       end
 
       def find_sti_class(type_name)
-        type_name += "History" unless type_name =~ /History\Z/
+        type_name += 'History' unless type_name =~ /History\Z/
 
         begin
           super
@@ -66,12 +69,10 @@ module TemporalTables
 
     module ClassMethods
       def orig_class
-        name.sub(/History$/, "").constantize
+        name.sub(/History$/, '').constantize
       end
 
-      def descends_from_active_record?
-        superclass.descends_from_active_record?
-      end
+      delegate :descends_from_active_record?, to: :superclass
 
       def build_temporal_constraint(at_value)
         arel_table[:eff_to].gteq(at_value).and(
@@ -89,7 +90,7 @@ module TemporalTables
     end
 
     def orig_obj
-      @orig_obj ||= orig_class.find_by_id orig_id
+      @orig_obj ||= orig_class.find_by id: orig_id
     end
 
     def prev

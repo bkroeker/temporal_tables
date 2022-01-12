@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TemporalTables
   # Uses the time from the "at" field stored in the record to filter queries
   # made to associations.
