@@ -5,7 +5,7 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'temporal_tables/version'
 
-Gem::Specification.new do |gem|
+Gem::Specification.new do |gem| # rubocop:disable Metrics/BlockLength
   gem.name = 'temporal_tables'
   gem.version = TemporalTables::VERSION
   gem.authors = ['Brent Kroeker']
@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
   gem.required_ruby_version = '>= 2.5.0'
+  gem.metadata = { 'rubygems_mfa_required' => 'true' }
 
   gem.add_dependency 'rails', '>= 6.0', '< 7.1'
   gem.add_development_dependency 'combustion', '~> 1'
