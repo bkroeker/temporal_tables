@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module TemporalTables
-  module TemporalAdapter # rubocop:disable Metrics/ModuleLength
+  # The main difference here is the add_index method, which still uses
+  # the old options={} syntax
+  module TemporalAdapterSixOh # rubocop:disable Metrics/ModuleLength
     def create_table(table_name, **options, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if options[:temporal_bypass]
         super(table_name, **options, &block)
@@ -123,22 +125,23 @@ module TemporalTables
       create_temporal_triggers table_name
     end
 
-    def add_index(table_name, column_name, **options)
-      super(table_name, column_name, **options)
+    def add_index(table_name, column_name, options = {})
+      super(table_name, column_name, options)
 
       return unless table_exists?(temporal_name(table_name))
 
-      idx_name = temporal_index_name(options[:name] || index_name(table_name, column: column_name))
-      super temporal_name(table_name), column_name, **options.except(:unique).merge(name: idx_name)
+      column_names = Array.wrap(column_name)
+      idx_name = temporal_index_name(options[:name] || index_name(table_name, column: column_names))
+      super temporal_name(table_name), column_name, options.except(:unique).merge(name: idx_name)
     end
 
-    def remove_index(table_name, column_name = nil, **options)
-      super(table_name, column_name, **options)
+    def remove_index(table_name, options = {})
+      super(table_name, options)
 
       return unless table_exists?(temporal_name(table_name))
 
-      idx_name = temporal_index_name(options[:name] || index_name_for_remove(table_name, column_name, options))
-      super temporal_name(table_name), column_name, name: idx_name
+      idx_name = temporal_index_name(index_name_for_remove(table_name, options))
+      super temporal_name(table_name), name: idx_name
     end
 
     def create_temporal_indexes(table_name) # rubocop:disable Metrics/MethodLength
