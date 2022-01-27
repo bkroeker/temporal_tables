@@ -9,9 +9,10 @@ module TemporalTables
         execute "drop trigger #{table_name}_ad"
       end
 
-      def create_temporal_triggers(table_name) # rubocop:disable Metrics/MethodLength
+      def create_temporal_triggers(table_name) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         column_names = columns(table_name).map(&:name)
 
+        execute "drop trigger if exists #{table_name}_ai"
         execute %{
           create trigger #{table_name}_ai after insert on #{table_name}
           for each row
@@ -24,6 +25,7 @@ module TemporalTables
           end
         }
 
+        execute "drop trigger if exists #{table_name}_au"
         execute %{
           create trigger #{table_name}_au after update on #{table_name}
           for each row
@@ -40,6 +42,7 @@ module TemporalTables
           end
         }
 
+        execute "drop trigger if exists #{table_name}_ad"
         execute %{
           create trigger #{table_name}_ad after delete on #{table_name}
           for each row

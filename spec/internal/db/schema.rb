@@ -9,20 +9,21 @@ end
 ActiveRecord::Schema.define do
   enable_extension 'pgcrypto' if postgres
 
-  create_table :people, temporal: true, force: true do |t|
-    t.belongs_to :coven
-    t.string :name
-  end
-
   create_table :covens, force: true do |t|
     t.string :name
   end
   add_temporal_table :covens
 
+  create_table :people, temporal: true, force: true do |t|
+    t.belongs_to :coven
+    t.string :name
+  end
+  add_index :people, :name, unique: true
+
   create_table :warts, temporal: true, force: true do |t|
     t.belongs_to :person
-    t.integer :hairiness
   end
+  add_column :warts, :hairiness, :integer
 
   create_table :flying_machines, temporal: true, force: true do |t|
     t.belongs_to :person

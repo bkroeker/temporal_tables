@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    temporal_tables (1.0.1)
+    temporal_tables (1.0.2)
       rails (>= 6.0, < 7.1)
 
 GEM
