@@ -30,6 +30,8 @@ ActiveRecord::Schema.define do
     t.string :type
     t.string :model
   end
+  add_index :flying_machines, :model, unique: true
+  remove_index :flying_machines, :model
 
   create_table :cats, id: (postgres ? :uuid : :integer), temporal: true, force: true do |t|
     t.string :name
