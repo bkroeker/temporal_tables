@@ -136,11 +136,12 @@ module TemporalTables
     end
 
     def remove_index(table_name, options = {})
+      original_index_name = index_name_for_remove(table_name, options)
       super(table_name, options)
 
       return unless table_exists?(temporal_name(table_name))
 
-      idx_name = temporal_index_name(index_name_for_remove(table_name, options))
+      idx_name = temporal_index_name(original_index_name)
       super temporal_name(table_name), name: idx_name
     end
 
