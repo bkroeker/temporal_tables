@@ -9,7 +9,7 @@ module TemporalTables
         execute "drop trigger #{table_name}_ad"
       end
 
-      def create_temporal_triggers(table_name) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def create_temporal_triggers(table_name, primary_key) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
         column_names = columns(table_name).map(&:name)
 
         execute "drop trigger if exists #{table_name}_ai"
@@ -33,7 +33,7 @@ module TemporalTables
             set @current_time = utc_timestamp(6);
 
             update #{temporal_name(table_name)} set eff_to = @current_time
-            where id = new.id
+            where #{primary_key} = new.#{primary_key}
             and eff_to = '9999-12-31';
 
             insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
@@ -50,7 +50,7 @@ module TemporalTables
             set @current_time = utc_timestamp(6);
 
             update #{temporal_name(table_name)} set eff_to = @current_time
-            where id = old.id
+            where #{primary_key} = old.#{primary_key}
             and eff_to = '9999-12-31';
 
           end
