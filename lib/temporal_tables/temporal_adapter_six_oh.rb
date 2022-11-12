@@ -41,7 +41,11 @@ module TemporalTables
         columns(table_name).each do |c|
           next if c.name == 'id'
 
-          t.send c.type, c.name, limit: c.limit
+          if t.respond_to?(c.type)
+            t.send c.type, c.name, limit: c.limit
+          else
+            t.column c.name, c.sql_type_metadata.sql_type
+          end
         end
       end
 

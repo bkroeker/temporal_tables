@@ -39,7 +39,13 @@ module TemporalTables
         columns(table_name).each do |c|
           next if c.name == 'id'
 
-          t.send c.type, c.name, limit: c.limit
+          if t.respond_to?(c.type)
+            options = { limit: c.limit }
+            options[:enum_type] = c.sql_type_metadata.sql_type if c.type == :enum
+            t.send c.type, c.name, **options
+          else          
+            t.column c.name, c.sql_type_metadata.sql_type
+          end
         end
       end
 

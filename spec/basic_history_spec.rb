@@ -161,6 +161,12 @@ describe Person do
       cat.lives.create started_at: Time.zone.now
     end
 
+    # The following tests enum type columns for postgres
+    it 'breed is set correctly' do
+      expect(cat.breed).to eq('ragdoll')
+      expect(cat.history.last.breed).to eq('ragdoll')
+    end
+
     it 'shows one life at the beginning' do
       expect(cat.history.at(@init_time).last.lives.size).to eq(1)
     end
