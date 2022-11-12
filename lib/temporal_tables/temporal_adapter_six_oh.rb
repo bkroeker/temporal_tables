@@ -55,7 +55,7 @@ module TemporalTables
         end
       end
 
-      add_index temporal_name(table_name), [:id, :eff_to]
+      add_index temporal_name(table_name), [:id, :eff_to] if options[:id] != false
       create_temporal_triggers table_name
       create_temporal_indexes table_name
     end

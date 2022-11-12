@@ -40,9 +40,9 @@ module TemporalTables
           next if c.name == 'id'
 
           if t.respond_to?(c.type)
-            options = { limit: c.limit }
-            options[:enum_type] = c.sql_type_metadata.sql_type if c.type == :enum
-            t.send c.type, c.name, **options
+            column_options = { limit: c.limit }
+            column_options[:enum_type] = c.sql_type_metadata.sql_type if c.type == :enum
+            t.send c.type, c.name, **column_options
           else          
             t.column c.name, c.sql_type_metadata.sql_type
           end
@@ -55,7 +55,7 @@ module TemporalTables
         end
       end
 
-      add_index temporal_name(table_name), [:id, :eff_to]
+      add_index temporal_name(table_name), [:id, :eff_to] if options[:id] != false
       create_temporal_triggers table_name
       create_temporal_indexes table_name
     end
