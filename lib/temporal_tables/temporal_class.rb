@@ -90,7 +90,7 @@ module TemporalTables
     end
 
     def orig_obj
-      @orig_obj ||= orig_class.find_by id: orig_id
+      @orig_obj ||= orig_class.find_by(orig_class.primary_key => orig_id)
     end
 
     def prev

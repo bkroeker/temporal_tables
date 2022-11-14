@@ -161,12 +161,51 @@ describe Person do
       cat.lives.create started_at: Time.zone.now
     end
 
+    # The following tests enum type columns for postgres
+    it 'breed is set correctly' do
+      expect(cat.breed).to eq('ragdoll')
+      expect(cat.history.last.breed).to eq('ragdoll')
+    end
+
     it 'shows one life at the beginning' do
       expect(cat.history.at(@init_time).last.lives.size).to eq(1)
     end
 
     it 'shows two lives at the end' do
       expect(cat.history.last.lives.size).to eq(2)
+    end
+  end
+
+  # The following tests PKs with names other than "id"
+  describe 'when spawning and renaming a creature with PK not named id' do
+    let!(:dog) { Dog.create name: 'Fido' }
+
+    context 'Fido is renamed to Max' do
+      before do
+        dog.name = 'Max'
+        dog.save!
+      end
+
+      it 'name is set correctly and we remember Max\'s original name' do
+        expect(dog.name).to eq('Max')
+        expect(dog.history.last.name).to eq('Max')
+
+        fido = dog.history.first
+        expect(fido.name).to eq('Fido')
+        expect(fido.orig_obj.name).to eq('Max')
+      end
+
+      context 'Max is rehomed' do
+        before do
+          dog.destroy!
+        end
+
+        it 'Max is no longer home but Max/Fido lives on in our memories' do
+          expect(Dog.count).to eq(0)
+          expect(dog.history.last.name).to eq('Max')
+          expect(dog.history.first.name).to eq('Fido')
+        end
+      end
     end
   end
 end
