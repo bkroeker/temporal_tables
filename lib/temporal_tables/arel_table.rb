@@ -9,7 +9,7 @@ module TemporalTables
       if at_value
         join =
           join
-          .and(to[:eff_to].gteq(at_value))
+          .and(to[:eff_to].gt(at_value))
           .and(to[:eff_from].lteq(at_value))
       end
       join

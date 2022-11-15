@@ -195,6 +195,12 @@ describe Person do
         expect(fido.orig_obj.name).to eq('Max')
       end
 
+      it 'at the exact time of the name change, the dog should not be both Max and Fido' do
+        dog_at_moment_of_name_change = dog.history.at(dog.history.last.eff_from)
+        expect(dog_at_moment_of_name_change.count).to eq(1)
+        expect(dog_at_moment_of_name_change.first.name).to eq('Max')
+      end
+
       context 'Max is rehomed' do
         before do
           dog.destroy!

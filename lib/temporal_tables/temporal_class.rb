@@ -75,7 +75,7 @@ module TemporalTables
       delegate :descends_from_active_record?, to: :superclass
 
       def build_temporal_constraint(at_value)
-        arel_table[:eff_to].gteq(at_value).and(
+        arel_table[:eff_to].gt(at_value).and(
           arel_table[:eff_from].lteq(at_value)
         )
       end
