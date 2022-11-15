@@ -90,10 +90,10 @@ describe Person do
         where = sql[4]
 
         expect(from.scan(/.warts_h.\..eff_from./i).count).to eq(1)
-        expect(from.scan(/.warts_h.\..eff_to./i).count).to eq(1)
+        expect(from.scan(/.warts_h.\..eff_to./i).count).to eq(2)
 
         expect(where.scan(/.people_h.\..eff_from./i).count).to eq(1)
-        expect(where.scan(/.people_h.\..eff_to./i).count).to eq(1)
+        expect(where.scan(/.people_h.\..eff_to./i).count).to eq(2)
         expect(where.scan(/.warts_h.\..eff_from./i).count).to eq(0)
         expect(where.scan(/.warts_h.\..eff_to./i).count).to eq(0)
       end

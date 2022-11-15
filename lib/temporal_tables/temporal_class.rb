@@ -74,8 +74,10 @@ module TemporalTables
 
       delegate :descends_from_active_record?, to: :superclass
 
+      # An object at a given time should fall within the range, excluding the effective end date.
+      # However, when using '9999-12-31', this is effectively infinity and should not be excluded.
       def build_temporal_constraint(at_value)
-        arel_table[:eff_to].gt(at_value).and(
+        (arel_table[:eff_to].gt(at_value).or(arel_table[:eff_to].eq('9999-12-31'))).and(
           arel_table[:eff_from].lteq(at_value)
         )
       end
