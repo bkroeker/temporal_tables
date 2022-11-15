@@ -9,7 +9,7 @@ module TemporalTables
       if at_value
         join =
           join
-          .and(to[:eff_to].gt(at_value))
+          .and(to[:eff_to].gt(at_value).or(to[:eff_to].eq('9999-12-31')))
           .and(to[:eff_from].lteq(at_value))
       end
       join
