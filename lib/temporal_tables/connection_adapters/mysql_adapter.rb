@@ -34,7 +34,7 @@ module TemporalTables
 
             update #{temporal_name(table_name)} set eff_to = @current_time
             where #{primary_key} = new.#{primary_key}
-            and eff_to = '9999-12-31';
+            and eff_to = '#{TemporalTables::END_OF_TIME}';
 
             insert into #{temporal_name(table_name)} (#{column_names.join(', ')}, eff_from)
             values (#{column_names.collect { |c| "new.#{c}" }.join(', ')}, @current_time);
@@ -51,7 +51,7 @@ module TemporalTables
 
             update #{temporal_name(table_name)} set eff_to = @current_time
             where #{primary_key} = old.#{primary_key}
-            and eff_to = '9999-12-31';
+            and eff_to = '#{TemporalTables::END_OF_TIME}';
 
           end
         }

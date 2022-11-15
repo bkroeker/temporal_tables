@@ -35,7 +35,7 @@ module TemporalTables
         **options.merge(id: false, primary_key: 'history_id', temporal_bypass: true)
       ) do |t|
         t.datetime :eff_from, null: false, limit: 6
-        t.datetime :eff_to,   null: false, limit: 6, default: '9999-12-31'
+        t.datetime :eff_to,   null: false, limit: 6, default: TemporalTables::END_OF_TIME
 
         columns(table_name).each do |c|
           column_options = { limit: c.limit }
