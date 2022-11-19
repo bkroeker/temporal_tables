@@ -12,6 +12,7 @@ require 'temporal_tables/association_extensions'
 require 'temporal_tables/preloader_extensions'
 require 'temporal_tables/reflection_extensions'
 require 'temporal_tables/arel_table'
+require 'temporal_tables/constants'
 require 'temporal_tables/version'
 
 module TemporalTables

@@ -90,10 +90,10 @@ describe Person do
         where = sql[4]
 
         expect(from.scan(/.warts_h.\..eff_from./i).count).to eq(1)
-        expect(from.scan(/.warts_h.\..eff_to./i).count).to eq(1)
+        expect(from.scan(/.warts_h.\..eff_to./i).count).to eq(2)
 
         expect(where.scan(/.people_h.\..eff_from./i).count).to eq(1)
-        expect(where.scan(/.people_h.\..eff_to./i).count).to eq(1)
+        expect(where.scan(/.people_h.\..eff_to./i).count).to eq(2)
         expect(where.scan(/.warts_h.\..eff_from./i).count).to eq(0)
         expect(where.scan(/.warts_h.\..eff_to./i).count).to eq(0)
       end
@@ -193,6 +193,12 @@ describe Person do
         fido = dog.history.first
         expect(fido.name).to eq('Fido')
         expect(fido.orig_obj.name).to eq('Max')
+      end
+
+      it 'at the exact time of the name change, the dog should not be both Max and Fido' do
+        dog_at_moment_of_name_change = dog.history.at(dog.history.last.eff_from)
+        expect(dog_at_moment_of_name_change.count).to eq(1)
+        expect(dog_at_moment_of_name_change.first.name).to eq('Max')
       end
 
       context 'Max is rehomed' do

@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module TemporalTables
-  VERSION = '2.0.0'
+  END_OF_TIME = '9999-12-31'
 end
