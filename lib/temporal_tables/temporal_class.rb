@@ -33,7 +33,7 @@ module TemporalTables
 
             # Calling .history here will ensure that the history class
             # for this association is created and initialized
-            clazz = association.class_name.constantize.history
+            clazz = association.klass.history
 
             # Recreate the association, updating it to point at the
             # history class.  The foreign key is explicitly set since it's
