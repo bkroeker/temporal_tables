@@ -27,7 +27,7 @@ Gem::Specification.new do |gem| # rubocop:disable Metrics/BlockLength
   gem.add_dependency 'rails', '>= 6.0', '< 7.1'
   gem.add_development_dependency 'combustion', '~> 1'
   gem.add_development_dependency 'database_cleaner'
-  gem.add_development_dependency 'gemika', '~> 0.6'
+  gem.add_development_dependency 'gemika', '~> 0.8'
   gem.add_development_dependency 'mysql2'
   gem.add_development_dependency 'pg'
   gem.add_development_dependency 'pry'
