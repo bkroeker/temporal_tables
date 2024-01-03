@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    temporal_tables (1.0.3)
+    temporal_tables (2.0.0)
       rails (>= 6.0, < 7.1)
 
 GEM
@@ -101,6 +101,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.12.5-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.12.5-x86_64-linux)
+      racc (~> 1.4)
     pg (1.2.3)
     racc (1.6.0)
     rack (2.2.3)
@@ -157,6 +159,7 @@ GEM
 PLATFORMS
   arm64-darwin-20
   x86_64-darwin-19
+  x86_64-linux
 
 DEPENDENCIES
   byebug
