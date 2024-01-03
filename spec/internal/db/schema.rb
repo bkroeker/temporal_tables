@@ -60,4 +60,13 @@ ActiveRecord::Schema.define do
   create_table :a_very_very_very_very_very_long_table_name, temporal: true do |t|
     t.string :name
   end
+
+  create_table :birds, id: (postgres ? :uuid : :integer), temporal: true, force: true do |t|
+    t.string :name
+  end
+
+  create_table :nests, id: (postgres ? :uuid : :integer), temporal: true do |t|
+    t.belongs_to :bird, type: (postgres ? :uuid : :integer)
+    t.integer :height
+  end
 end

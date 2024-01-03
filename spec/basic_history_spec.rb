@@ -215,3 +215,17 @@ describe Person do
     end
   end
 end
+
+describe Bird do
+  context 'when a bird and nest exist' do
+    let(:bird) { Bird.create name: 'Sam' }
+    let(:nest) { Bird::Nest.create bird: bird, height: 100 }
+
+    it 'can create instance of class with nested class name with history entries' do
+      expect(bird).not_to be_nil
+      expect(nest).not_to be_nil
+      expect(bird.history.first).not_to be_nil
+      expect(nest.history.first).not_to be_nil
+    end
+  end
+end
