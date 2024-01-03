@@ -27,18 +27,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["2.5", "2.6", "2.7", "3.0", "3.1"]
-        rails: ["6.0", "6.1", "7.0"]
-        db: ["pg", "mysql"]
-        exclude:
-          - ruby: 2.5
-            rails: 7.0
-          - ruby: 2.6
-            rails: 7.0
-          - ruby: 3.1
-            rails: 7.0
+        ruby: ["3.0.6", "3.1.4", "3.2.2"]
+        gemfile: 
+          - "gemfiles/Gemfile.6.1.mysql"
+          - "gemfiles/Gemfile.6.1.pg"
+          - "gemfiles/Gemfile.7.0.mysql"
+          - "gemfiles/Gemfile.7.0.pg"
     env:
-      BUNDLE_GEMFILE: ${{github.workspace}}/gemfiles/Gemfile.${{matrix.rails}}.${{ matrix.db }}
+      BUNDLE_GEMFILE: ${{github.workspace}}/gemfiles/${{matrix.gemfile }}
     steps:
     - uses: actions/checkout@v2
     - uses: ruby/setup-ruby@v1
