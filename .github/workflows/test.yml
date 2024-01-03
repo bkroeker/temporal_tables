@@ -33,6 +33,8 @@ jobs:
           - "gemfiles/Gemfile.6.1.pg"
           - "gemfiles/Gemfile.7.0.mysql"
           - "gemfiles/Gemfile.7.0.pg"
+          - "gemfiles/Gemfile.7.1.mysql"
+          - "gemfiles/Gemfile.7.1.pg"
     env:
       BUNDLE_GEMFILE: ${{github.workspace}}/${{matrix.gemfile }}
     steps:
