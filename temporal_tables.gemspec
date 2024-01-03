@@ -21,13 +21,13 @@ Gem::Specification.new do |gem| # rubocop:disable Metrics/BlockLength
   gem.executables = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
-  gem.required_ruby_version = '>= 2.5.0'
+  gem.required_ruby_version = '>= 3.0.0'
   gem.metadata = { 'rubygems_mfa_required' => 'true' }
 
-  gem.add_dependency 'rails', '>= 6.0', '< 7.1'
+  gem.add_dependency 'rails', '>= 6.0', '< 7.2'
   gem.add_development_dependency 'combustion', '~> 1'
   gem.add_development_dependency 'database_cleaner'
-  gem.add_development_dependency 'gemika', '~> 0.6'
+  gem.add_development_dependency 'gemika', '~> 0.8'
   gem.add_development_dependency 'mysql2'
   gem.add_development_dependency 'pg'
   gem.add_development_dependency 'pry'

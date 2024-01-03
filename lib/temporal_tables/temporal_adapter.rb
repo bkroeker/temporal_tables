@@ -5,12 +5,13 @@ require 'digest'
 module TemporalTables
   module TemporalAdapter # rubocop:disable Metrics/ModuleLength
     def create_table(table_name, **options, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+      valid_options = options.except(:temporal, :temporal_bypass)
       if options[:temporal_bypass]
-        super(table_name, **options, &block)
+        super(table_name, **valid_options, &block)
       else
         skip_table = TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) || table_name.to_s =~ /_h$/
 
-        super(table_name, **options) do |t|
+        super(table_name, **valid_options) do |t|
           block.call t
 
           if TemporalTables.add_updated_by_field && !skip_table

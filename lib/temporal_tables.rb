@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'temporal_tables/temporal_adapter'
-require 'temporal_tables/temporal_adapter_six_oh'
 require 'temporal_tables/connection_adapters/mysql_adapter'
 require 'temporal_tables/connection_adapters/postgresql_adapter'
 require 'temporal_tables/whodunnit'
@@ -23,11 +22,7 @@ module TemporalTables
       # It's necessary to do this on the implementations in order for the
       # alias method chain hooks to work.
       ActiveRecord::ConnectionAdapters::AbstractAdapter.subclasses.each do |subclass|
-        if ActiveRecord.version < ::Gem::Version.new('6.1')
-          subclass.send :prepend, TemporalTables::TemporalAdapterSixOh
-        else
-          subclass.send :prepend, TemporalTables::TemporalAdapter
-        end
+        subclass.send :prepend, TemporalTables::TemporalAdapter
 
         module_name = subclass.name.split('::').last
         next unless TemporalTables::ConnectionAdapters.const_defined?(module_name)
