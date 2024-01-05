@@ -47,6 +47,9 @@ jobs:
         gem install bundler:2.2.15
         bundle install
 
+    - name: Run Rubocop
+      run: bundle exec rubocop
+
     - name: Run Tests
       env:
         PGHOST: localhost

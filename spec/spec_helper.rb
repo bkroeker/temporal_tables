@@ -45,7 +45,7 @@ rescue ActiveRecord::RecordNotUnique
 end
 
 RSpec.configure do |config|
-  config.before(:each) do
+  config.before do
     DatabaseCleaner.clean
   end
 end
