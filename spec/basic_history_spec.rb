@@ -132,6 +132,21 @@ describe Person do
       end
     end
 
+    # This test is to cover the StatementCache issue being worked around by the monkey patch in AssociationExtensions
+    describe 'when making multiple association queries with different at values for different data' do
+      it 'the correct data should be returned' do
+        sabrina = Person.create name: 'Sabrina'
+        sabrina_wart = Wart.create person: sabrina
+        current_sabrina = sabrina_wart.history.at(Time.current).first.person
+
+        willow = Person.create name: 'Willow'
+        willow_wart = Wart.create person: willow
+        current_willow = willow_wart.history.at(Time.current).first.person
+
+        expect(current_willow.name).to eq('Willow')
+      end
+    end
+
     describe 'when working with STI one level deep' do
       let!(:broom) { Broom.create person: emily, model: 'Cackler 2000' }
 

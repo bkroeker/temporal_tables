@@ -16,6 +16,14 @@ module TemporalTables
         super
       end
     end
+
+    # There seems to be an issue with the statement cache for history associations.
+    # This may be due to the at_value not being part of how the relations are hashed,
+    # or that the cached statements are not parameterized. Will require further investigation.
+    # In the meantime, we can workaround this issue by disabling the statement cache for History queries.
+    def skip_statement_cache?(scope)
+      klass.is_a?(TemporalTables::TemporalClass::ClassMethods) || super(scope)
+    end
   end
 end
 
