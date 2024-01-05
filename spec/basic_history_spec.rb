@@ -135,15 +135,15 @@ describe Person do
     # This test is to cover the StatementCache issue being worked around by the monkey patch in AssociationExtensions
     describe 'when making multiple association queries with different at values for different data' do
       it 'the correct data should be returned' do
-        person1 = Person.create name: 'P1'
-        wart1 = Wart.create person: person1
-        currentPerson1 = wart1.history.at(Time.current).first.person
+        sabrina = Person.create name: 'Sabrina'
+        sabrina_wart = Wart.create person: sabrina
+        current_sabrina = sabrina_wart.history.at(Time.current).first.person
 
-        person2 = Person.create name: 'P2'
-        wart2 = Wart.create person: person2
-        currentPerson2 = wart2.history.at(Time.current).first.person
+        willow = Person.create name: 'Willow'
+        willow_wart = Wart.create person: willow
+        current_willow = willow_wart.history.at(Time.current).first.person
 
-        expect(currentPerson2.name).to eq('P2')
+        expect(current_willow.name).to eq('Willow')
       end
     end
 
