@@ -5,7 +5,7 @@ lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'temporal_tables/version'
 
-Gem::Specification.new do |gem| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |gem|
   gem.name = 'temporal_tables'
   gem.version = TemporalTables::VERSION
   gem.authors = ['Brent Kroeker']
@@ -33,5 +33,7 @@ Gem::Specification.new do |gem| # rubocop:disable Metrics/BlockLength
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'rspec', '~> 3.4'
   gem.add_development_dependency 'rubocop'
+  gem.add_development_dependency 'rubocop-rails'
+  gem.add_development_dependency 'rubocop-rspec'
   gem.metadata['rubygems_mfa_required'] = 'true'
 end

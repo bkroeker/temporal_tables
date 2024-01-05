@@ -137,7 +137,7 @@ describe Person do
       it 'the correct data should be returned' do
         sabrina = Person.create name: 'Sabrina'
         sabrina_wart = Wart.create person: sabrina
-        current_sabrina = sabrina_wart.history.at(Time.current).first.person
+        sabrina_wart.history.at(Time.current).first.person
 
         willow = Person.create name: 'Willow'
         willow_wart = Wart.create person: willow
@@ -195,7 +195,7 @@ describe Person do
   describe 'when spawning and renaming a creature with PK not named id' do
     let!(:dog) { Dog.create name: 'Fido' }
 
-    context 'Fido is renamed to Max' do
+    context 'when Fido is renamed to Max' do
       before do
         dog.name = 'Max'
         dog.save!
@@ -216,7 +216,7 @@ describe Person do
         expect(dog_at_moment_of_name_change.first.name).to eq('Max')
       end
 
-      context 'Max is rehomed' do
+      context 'when Max is rehomed' do
         before do
           dog.destroy!
         end
