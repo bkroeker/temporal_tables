@@ -10,8 +10,8 @@ module TemporalTables
       # Using responds_to? results in an infinite loop stack overflow.
       if @owner.public_methods.include?(:at_value)
         # If this is a history record but no at time was given,
-        # assume the record's effective to date
-        super.at(@owner.at_value || @owner.eff_to)
+        # assume the record's effective to date minus 1 microsecond
+        super.at(@owner.at_value || (@owner.eff_to - TemporalTables::ONE_MICROSECOND))
       else
         super
       end
