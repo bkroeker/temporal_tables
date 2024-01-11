@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/bkroeker/temporal_tables/workflows/Continuous%20Integration/badge.svg?branch=master)](https://github.com/bkroeker/temporal_tables/actions)
+[![Continuous Integration](https://github.com/bkroeker/temporal_tables/actions/workflows/test.yml/badge.svg)](https://github.com/bkroeker/temporal_tables/actions/workflows/test.yml)
 
 # TemporalTables
 
