@@ -229,6 +229,26 @@ describe Person do
       end
     end
   end
+
+  describe 'when removing a creature' do
+    let!(:wart) { Wart.create person: emily, hairiness: 3 }
+
+    before do
+      emily.destroy!
+      sleep 0.1
+    end
+
+    it 'destroys associated warts and we remember the historical association' do
+      expect(emily).to be_destroyed
+      expect { wart.reload }.to raise_error(ActiveRecord::RecordNotFound) # as it belonged to emily
+
+      wart_h = wart.history.last # the last version of the wart
+      expect(wart_h).to be_present
+
+      emily_h = wart_h.person
+      expect(emily_h).to be_present # we should be able to tell what person our wart belonged to
+    end
+  end
 end
 
 describe Bird do
