@@ -84,7 +84,7 @@ ActiveRecord::Schema.define do
   end
 
   create_table :hamster_wheels, id: (postgres ? :uuid : :integer), temporal: true do |t|
-    t.column :hamster_uuid, (postgres ? :uuid : :integer), null: false
+    t.column :hamster_uuid, (postgres ? :uuid : :bigint), null: false
     t.foreign_key :hamsters, column: :hamster_uuid, primary_key: :uuid
   end
 end
