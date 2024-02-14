@@ -69,4 +69,22 @@ ActiveRecord::Schema.define do
     t.belongs_to :bird, type: (postgres ? :uuid : :integer)
     t.integer :height
   end
+
+  if postgres
+    create_table :hamsters, id: false do |t|
+      t.column :uuid, :uuid, default: 'gen_random_uuid()'
+      t.string :name
+    end
+    execute 'ALTER TABLE hamsters ADD PRIMARY KEY (uuid);'
+    add_temporal_table :hamsters
+  else
+    create_table :hamsters, primary_key: :uuid, temporal: true do |t|
+      t.string :name
+    end
+  end
+
+  create_table :hamster_wheels, id: (postgres ? :uuid : :integer), temporal: true do |t|
+    t.column :hamster_uuid, (postgres ? :uuid : :integer), null: false
+    t.foreign_key :hamsters, column: :hamster_uuid, primary_key: :uuid
+  end
 end
