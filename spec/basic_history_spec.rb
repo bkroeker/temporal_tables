@@ -264,3 +264,19 @@ describe Bird do
     end
   end
 end
+
+describe Hamster do
+  context 'with tables that have non-default primary key names' do
+    let(:hamster) { Hamster.create name: 'Fluffy' }
+    let(:wheel) { HamsterWheel.create hamster: hamster }
+
+    it 'can create instance of class with nested class name with history entries' do
+      expect(hamster).not_to be_nil
+      expect(wheel).not_to be_nil
+      expect(hamster.hamster_wheel).not_to be_nil
+      hamster_history = Hamster.history.at(Time.now.utc).first
+      expect(hamster_history).not_to be_nil
+      expect(hamster_history.hamster_wheel).not_to be_nil
+    end
+  end
+end

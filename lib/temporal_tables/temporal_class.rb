@@ -42,8 +42,7 @@ module TemporalTables
               association.macro, association.name,
               **association.options.merge(
                 class_name: clazz.name,
-                foreign_key: association.foreign_key,
-                primary_key: clazz.orig_class.primary_key
+                foreign_key: association.foreign_key
               )
             )
           end
