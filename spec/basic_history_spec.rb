@@ -266,7 +266,7 @@ describe Bird do
 end
 
 describe Hamster do
-  context 'when a hamster and wheel exist' do
+  context 'with tables that have non-default primary key names' do
     let(:hamster) { Hamster.create name: 'Fluffy' }
     let(:wheel) { HamsterWheel.create hamster: hamster }
 
