@@ -75,6 +75,10 @@ module TemporalTables
 
       drop_temporal_triggers table_name
       drop_table_without_temporal temporal_name(table_name)
+
+      if TemporalTables.add_updated_by_field && column_exists?(table_name, :updated_by)
+        remove_column table_name, :updated_by
+      end
     end
 
     def drop_table(table_name, **options)
