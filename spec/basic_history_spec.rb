@@ -191,6 +191,20 @@ describe Person do
     end
   end
 
+  describe 'when changing a creature with an array column' do
+    let!(:cat) { Cat.create name: 'Mr. Mittens', nicknames: ['Blacky', 'Kitty'] }
+
+    before do
+      cat.update nicknames: ['Cutie', 'Mizie']
+    end
+
+    it 'show nicknames correctly' do
+      expect(cat.nicknames).to eq(['Cutie', 'Mizie'])
+      expect(cat.history.last.nicknames).to eq(['Cutie', 'Mizie'])
+      expect(cat.history.first.nicknames).to eq(['Blacky', 'Kitty'])
+    end
+  end
+
   # The following tests PKs with names other than "id"
   describe 'when spawning and renaming a creature with PK not named id' do
     let!(:dog) { Dog.create name: 'Fido' }
