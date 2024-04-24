@@ -148,9 +148,8 @@ describe Person do
     end
 
     describe 'when working with STI and using superclass history' do
-      let!(:broom) { Broom.create person: emily, model: 'Cackler 2000' }
-
       it 'allows to fetch history entry of subclass history' do
+        Broom.create person: emily, model: 'Cackler 2000'
         expect(FlyingMachine.history.last.class.name).to eql('BroomHistory')
       end
     end
