@@ -192,16 +192,16 @@ describe Person do
   end
 
   describe 'when changing a creature with an array column' do
-    let!(:cat) { Cat.create name: 'Mr. Mittens', nicknames: ['Blacky', 'Kitty'] }
+    let!(:cat) { Cat.create name: 'Mr. Mittens', nicknames: %w[Blacky Kitty] }
 
     before do
-      cat.update nicknames: ['Cutie', 'Mizie']
+      cat.update nicknames: %w[Cutie Mizie]
     end
 
     it 'show nicknames correctly' do
-      expect(cat.nicknames).to eq(['Cutie', 'Mizie'])
-      expect(cat.history.last.nicknames).to eq(['Cutie', 'Mizie'])
-      expect(cat.history.first.nicknames).to eq(['Blacky', 'Kitty'])
+      expect(cat.nicknames).to eq(%w[Cutie Mizie])
+      expect(cat.history.last.nicknames).to eq(%w[Cutie Mizie])
+      expect(cat.history.first.nicknames).to eq(%w[Blacky Kitty])
     end
   end
 
