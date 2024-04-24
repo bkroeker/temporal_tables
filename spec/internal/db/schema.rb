@@ -75,7 +75,8 @@ ActiveRecord::Schema.define do
     create_table :hamsters, id: false do |t|
       t.column :uuid, :uuid, default: 'gen_random_uuid()'
       t.string :name
-      t.index "((uuid)::text || ' '::text || (name)::text) gin_trgm_ops", name: :uuid_name_index_with_opclass_and_using, opclass: :gin_trgm_ops, using: :gin
+      t.index "((uuid)::text || ' '::text || (name)::text) gin_trgm_ops",
+              name: :uuid_name_index_with_opclass_and_using, opclass: :gin_trgm_ops, using: :gin
     end
     execute 'ALTER TABLE hamsters ADD PRIMARY KEY (uuid);'
     add_temporal_table :hamsters
