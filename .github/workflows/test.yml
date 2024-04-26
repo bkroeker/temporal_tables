@@ -11,6 +11,28 @@ on:
       - master
 
 jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.3"]
+        gemfile:
+          - "gemfiles/Gemfile.7.1.pg"
+    env:
+      BUNDLE_GEMFILE: ${{github.workspace}}/${{matrix.gemfile }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{ matrix.ruby }}"
+      - name: Bundle
+        run: bundle install
+
+      - name: Run Rubocop
+        run: bundle exec rubocop
+
   tests:
     runs-on: ubuntu-latest
 
@@ -51,9 +73,6 @@ jobs:
           gem install bundler:2.4.10
           bundle install
 
-      - name: Run Rubocop
-        run: bundle exec rubocop
-
       - name: Run Tests
         env:
           PGHOST: localhost
@@ -61,7 +80,9 @@ jobs:
         run: bundle exec rspec
 
   publish:
-    needs: [tests]
+    needs:
+      - rubocop
+      - tests
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
 
