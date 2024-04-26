@@ -14,13 +14,13 @@ module TemporalTables
         super(table_name, **valid_options) do |t|
           block.call t
 
-          if TemporalTables.add_updated_by_field && (options[:temporal] || TemporalTables.create_by_default && !skip_table)
+          if TemporalTables.add_updated_by_field &&
+             (options[:temporal] || TemporalTables.create_by_default && !skip_table)
             updated_by_already_exists = t.columns.any? { |c| c.name == 'updated_by' }
-            if updated_by_already_exists
-              raise "#{table_name} updated_by column exists already"
-            else
-              t.column(:updated_by, TemporalTables.updated_by_type)
-            end
+            raise "#{table_name} updated_by column exists already" if updated_by_already_exists
+
+            t.column(:updated_by, TemporalTables.updated_by_type)
+
           end
         end
 
@@ -55,13 +55,12 @@ module TemporalTables
       end
 
       if TemporalTables.add_updated_by_field
-        if column_exists?(table_name, :updated_by)
-          raise "#{table_name} updated_by column exists already"
-        else
-          change_table table_name do |t|
-            t.column :updated_by, TemporalTables.updated_by_type
-          end
+        raise "#{table_name} updated_by column exists already" if column_exists?(table_name, :updated_by)
+
+        change_table table_name do |t|
+          t.column :updated_by, TemporalTables.updated_by_type
         end
+
       end
 
       original_primary_key = original_primary_key(table_name)
