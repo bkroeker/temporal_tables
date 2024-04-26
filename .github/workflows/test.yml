@@ -38,13 +38,13 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        image: ${{ endsWith(matrix.gemfile, '.pg') && 'postgres:16' || '' }}
         env:
           POSTGRES_HOST_AUTH_METHOD: trust
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       mysql:
-        image: mysql:8
+        image: ${{ endsWith(matrix.gemfile, '.mysql') && 'mysql:8' || '' }}
         env:
           MYSQL_ROOT_PASSWORD: password
         ports: ["3306:3306"]
