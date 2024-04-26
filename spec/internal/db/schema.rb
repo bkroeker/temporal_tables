@@ -42,7 +42,7 @@ ActiveRecord::Schema.define do
     t.string :name
     t.string :color
     t.column :breed, (postgres ? :cat_breed : :string), null: false, default: 'ragdoll'
-    t.string :nicknames, array: true
+    t.string :nicknames, array: true if postgres
   end
 
   create_table :cat_lives, id: (postgres ? :uuid : :integer), temporal: true do |t|
