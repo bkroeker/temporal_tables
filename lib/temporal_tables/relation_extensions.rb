@@ -33,13 +33,15 @@ module TemporalTables
 
     def threadify_at
       if at_value && !Thread.current[:at_time]
-        Thread.current[:at_time] = at_value
-        result = yield
-        Thread.current[:at_time] = nil
+        begin
+          Thread.current[:at_time] = at_value
+          yield
+        ensure
+          Thread.current[:at_time] = nil
+        end
       else
-        result = yield
+        yield
       end
-      result
     end
 
     def limited_ids_for(*args)
