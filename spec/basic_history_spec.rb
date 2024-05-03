@@ -62,6 +62,15 @@ describe Person do
       end
     end
 
+    describe 'creating a join query' do
+      it 'correctly joins even after generating sql has failed before' do
+        expect { Person.history.at(100.years.ago).joins(:warts).where(x: proc {}).to_sql }.to raise_error(TypeError)
+
+        # it still fetches the history correctly
+        expect(Person.history.at(Time.current).joins(:warts)).to be_present
+      end
+    end
+
     describe 'when preloading associations' do
       let(:orig_emily) { emily.history.at(@init_time).preload(:warts).first }
 
