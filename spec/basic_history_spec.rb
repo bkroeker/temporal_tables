@@ -191,6 +191,22 @@ describe Person do
     end
   end
 
+  if TemporalTables::DatabaseAdapter.adapter_name != 'mysql'
+    describe 'when changing a creature with an array column' do
+      let!(:cat) { Cat.create name: 'Mr. Mittens', nicknames: %w[Blacky Kitty] }
+
+      before do
+        cat.update nicknames: %w[Cutie Mizie]
+      end
+
+      it 'show nicknames correctly' do
+        expect(cat.nicknames).to eq(%w[Cutie Mizie])
+        expect(cat.history.last.nicknames).to eq(%w[Cutie Mizie])
+        expect(cat.history.first.nicknames).to eq(%w[Blacky Kitty])
+      end
+    end
+  end
+
   # The following tests PKs with names other than "id"
   describe 'when spawning and renaming a creature with PK not named id' do
     let!(:dog) { Dog.create name: 'Fido' }

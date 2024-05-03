@@ -39,7 +39,7 @@ module TemporalTables
         t.datetime :eff_to,   null: false, limit: 6, default: TemporalTables::END_OF_TIME
 
         columns(table_name).each do |c|
-          column_options = { limit: c.limit }
+          column_options = { limit: c.limit, array: c.try(:array) }.compact
           column_type = c.type
           if column_type == :enum
             enum_type = c.sql_type_metadata.sql_type
