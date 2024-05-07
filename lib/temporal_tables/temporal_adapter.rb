@@ -172,7 +172,9 @@ module TemporalTables
           # exclude unique constraints for temporal tables
           name: index_name,
           length: index.lengths,
-          order: index.orders
+          order: index.orders,
+          using: index.using,
+          opclass: index.opclasses
         )
       end
     end
