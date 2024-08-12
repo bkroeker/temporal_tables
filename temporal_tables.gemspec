@@ -24,7 +24,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 3.0.0'
   gem.metadata = { 'rubygems_mfa_required' => 'true' }
 
-  gem.add_dependency 'rails', '>= 6.1', '< 7.2'
+  gem.add_dependency 'rails', '>= 6.1', '< 7.3'
   gem.add_development_dependency 'combustion', '~> 1'
   gem.add_development_dependency 'database_cleaner'
   gem.add_development_dependency 'gemika', '~> 0.8'
