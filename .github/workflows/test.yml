@@ -61,6 +61,13 @@ jobs:
           - "gemfiles/Gemfile.7.0.pg"
           - "gemfiles/Gemfile.7.1.mysql"
           - "gemfiles/Gemfile.7.1.pg"
+          - "gemfiles/Gemfile.7.2.mysql"
+          - "gemfiles/Gemfile.7.2.pg"
+        exclude:
+          - ruby: "3.0"
+            gemfile: "gemfiles/Gemfile.7.2.mysql"
+          - ruby: "3.0"
+            gemfile: "gemfiles/Gemfile.7.2.pg"
     env:
       BUNDLE_GEMFILE: ${{github.workspace}}/${{matrix.gemfile }}
     steps:

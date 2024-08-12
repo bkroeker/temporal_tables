@@ -1,0 +1,19 @@
+source 'https://rubygems.org'
+
+# Runtime dependencies
+gem 'rails', '~> 7.2.0'
+gem 'pg', '>= 0.18', '< 2.0'
+
+# Development dependencies
+gem 'rspec', '~> 3.4'
+gem 'rake'
+gem 'byebug'
+gem 'database_cleaner'
+gem 'combustion'
+gem 'gemika'
+gem 'rubocop'
+gem 'rubocop-rails'
+gem 'rubocop-rspec'
+
+# Gem under test
+gem 'temporal_tables', :path => '..'
