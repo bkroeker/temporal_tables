@@ -2,7 +2,7 @@ PATH
   remote: ..
   specs:
     temporal_tables (3.0.1)
-      rails (>= 6.1, < 7.2)
+      rails (>= 6.1, <= 7.2)
 
 GEM
   remote: https://rubygems.org/
@@ -218,6 +218,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-20
+  arm64-darwin-21
   x86_64-darwin-19
   x86_64-linux
 

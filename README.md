@@ -155,9 +155,9 @@ TemporalTables.add_updated_by_field(:integer) { User.current_user&.id }
 
 ## Development
 
-To add a new version of rails to the specs, create corresponding Gemfiles in the `gemfiles/` directory, and add references to them in `.travis.yml`.
+To add a new version of rails to the specs, create corresponding Gemfiles in the `gemfiles/` directory, and add references to them in `.github/workflows.yml`.
 
 To run specs, run `rake matrix:install` and `rake matrix:spec`.
 
-## Copyright
+## Copyright  
 See [LICENSE](https://github.com/bkroeker/temporal_tables/blob/master/LICENSE.txt) for more details.
