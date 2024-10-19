@@ -74,7 +74,7 @@ module TemporalTables
       return unless table_exists?(temporal_name(table_name))
 
       drop_temporal_triggers table_name
-      drop_table_without_temporal temporal_name(table_name)
+      drop_table temporal_name(table_name)
     end
 
     def drop_table(table_name, **options)
