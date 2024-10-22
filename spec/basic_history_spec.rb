@@ -207,7 +207,7 @@ describe Person do
     end
   end
 
-  if TemporalTables::DatabaseAdapter.adapter_name != 'mysql'
+  if TemporalTables::DatabaseHelper.adapter_name != 'mysql'
     describe 'when changing a creature with an array column' do
       let!(:cat) { Cat.create name: 'Mr. Mittens', nicknames: %w[Blacky Kitty] }
 
