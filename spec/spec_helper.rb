@@ -9,17 +9,9 @@ Dir["#{File.dirname(__FILE__)}/support/*.rb"].sort.each { |f| require f }
 READ_DATABASE_CONFIG_LOCATION = 'spec/internal/config/database.ci.yml'
 WRITE_DATABASE_CONFIG_LOCATION = 'spec/internal/config/database.yml'
 
-def adapter_name
-  if Gemika::Env.gem?('mysql2')
-    'mysql'
-  else
-    'postgresql'
-  end
-end
-
 def database_config_from_gems(file_location)
   config = YAML.load_file(file_location)
-  data = config.slice(adapter_name)
+  data = config.slice(TemporalTables::DatabaseHelper.adapter_name)
   { Rails.env.to_s => data }
 end
 
@@ -31,7 +23,7 @@ File.write(
   database_config_from_gems(READ_DATABASE_CONFIG_LOCATION).to_yaml
 )
 
-Rails.env = adapter_name
+Rails.env = TemporalTables::DatabaseHelper.adapter_name
 database = Gemika::Database.new
 database.connect
 
