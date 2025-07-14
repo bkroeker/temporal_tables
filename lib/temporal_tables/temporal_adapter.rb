@@ -4,30 +4,21 @@ require 'digest'
 
 module TemporalTables
   module TemporalAdapter # rubocop:disable Metrics/ModuleLength
-    def create_table(table_name, **options, &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+    def create_table(table_name, **options, &block)
       valid_options = options.except(:temporal, :temporal_bypass)
-      if options[:temporal_bypass]
-        super(table_name, **valid_options, &block)
-      else
-        skip_table = TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) || table_name.to_s =~ /_h$/
 
-        super(table_name, **valid_options) do |t|
-          block.call t
+      super(table_name, **valid_options, &block)
 
-          if TemporalTables.add_updated_by_field &&
-             (options[:temporal] || TemporalTables.create_by_default && !skip_table)
-            updated_by_already_exists = t.columns.any? { |c| c.name == 'updated_by' }
-            raise "#{table_name} updated_by column exists already" if updated_by_already_exists
+      return if options[:temporal_bypass]
 
-            t.column(:updated_by, TemporalTables.updated_by_type)
+      auto_create_table =
+        TemporalTables.create_by_default &&
+        !TemporalTables.skipped_temporal_tables.include?(table_name.to_sym) &&
+        table_name.to_s !~ /_h$/
 
-          end
-        end
+      return unless options[:temporal] || auto_create_table
 
-        if options[:temporal] || (TemporalTables.create_by_default && !skip_table)
-          add_temporal_table table_name, **options
-        end
-      end
+      add_temporal_table table_name, **options
     end
 
     def add_temporal_table(table_name, **options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
@@ -60,7 +51,6 @@ module TemporalTables
         change_table table_name do |t|
           t.column :updated_by, TemporalTables.updated_by_type
         end
-
       end
 
       original_primary_key = original_primary_key(table_name)
