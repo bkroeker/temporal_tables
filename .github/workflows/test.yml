@@ -65,6 +65,8 @@ jobs:
           - "gemfiles/Gemfile.7.2.pg"
           - "gemfiles/Gemfile.8.0.mysql"
           - "gemfiles/Gemfile.8.0.pg"
+          - "gemfiles/Gemfile.8.1.mysql"
+          - "gemfiles/Gemfile.8.1.pg"
         exclude:
           - ruby: "3.0"
             gemfile: "gemfiles/Gemfile.7.2.mysql"
@@ -74,10 +76,18 @@ jobs:
             gemfile: "gemfiles/Gemfile.8.0.mysql"
           - ruby: "3.0"
             gemfile: "gemfiles/Gemfile.8.0.pg"
+          - ruby: "3.0"
+            gemfile: "gemfiles/Gemfile.8.1.mysql"
+          - ruby: "3.0"
+            gemfile: "gemfiles/Gemfile.8.1.pg"
           - ruby: "3.1"
             gemfile: "gemfiles/Gemfile.8.0.mysql"
           - ruby: "3.1"
             gemfile: "gemfiles/Gemfile.8.0.pg"
+          - ruby: "3.1"
+            gemfile: "gemfiles/Gemfile.8.1.mysql"
+          - ruby: "3.1"
+            gemfile: "gemfiles/Gemfile.8.1.pg"
 
     env:
       BUNDLE_GEMFILE: ${{github.workspace}}/${{matrix.gemfile }}
